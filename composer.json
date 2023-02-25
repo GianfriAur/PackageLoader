@@ -1,0 +1,16 @@
+{
+    "name": "gianfriaur/package-loader",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Gianfriaur\\PackageLoader\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "GianfriAur",
+            "email": "gianfri.aur@live.com"
+        }
+    ],
+    "require": {}
+}
