@@ -6,11 +6,24 @@
             "Gianfriaur\\PackageLoader\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Gianfriaur\\PackageLoader\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "GianfriAur",
-            "email": "gianfri.aur@live.com"
+            "email": "gianfri.aur@gmail.com"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "orchestra/testbench": "^8.0",
+        "nunomaduro/collision": "^7.0"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    }
 }

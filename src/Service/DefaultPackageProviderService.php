@@ -2,6 +2,7 @@
 
 namespace Gianfriaur\PackageLoader\Service;
 
+use Gianfriaur\PackageLoader\Exception\BadPackageProviderException;
 use Gianfriaur\PackageLoader\Exception\MissingPackageProviderException;
 use Gianfriaur\PackageLoader\PackageProvider\AbstractPackageProvider;
 use Illuminate\Foundation\Application;
@@ -63,8 +64,14 @@ readonly class DefaultPackageProviderService implements PackageProviderServiceIn
                         throw new MissingPackageProviderException($package_provider_class);
                     }
 
+                    if (!is_subclass_of($package_provider_class,AbstractPackageProvider::class)){
+                        throw new BadPackageProviderException($package_provider_class);
+                    }
+
                     /** @var AbstractPackageProvider $package_provider */
                     $package_provider = new $package_provider_class($this->app,$this,$package_name_config['debug'] );
+
+
 
                     $this->app->register($package_provider);
 
