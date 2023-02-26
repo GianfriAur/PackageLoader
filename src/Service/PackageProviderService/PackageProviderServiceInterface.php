@@ -1,6 +1,6 @@
 <?php
 
-namespace Gianfriaur\PackageLoader\Service;
+namespace Gianfriaur\PackageLoader\Service\PackageProviderService;
 
 use Illuminate\Foundation\Application;
 

@@ -3,7 +3,7 @@
 namespace Gianfriaur\PackageLoader\Tests\Service;
 
 use Gianfriaur\PackageLoader\Exception\BadPackageProviderException;
-use Gianfriaur\PackageLoader\Service\DefaultPackageProviderService;
+use Gianfriaur\PackageLoader\Service\PackageProviderService\DefaultPackageProviderService;
 
 class DefaultPackageProviderServiceTest  extends \Orchestra\Testbench\TestCase
 {
@@ -29,18 +29,31 @@ class DefaultPackageProviderServiceTest  extends \Orchestra\Testbench\TestCase
         $this->assertStringContainsString($error, "Missing 'env' parameter on Test configuration");
     }
 
-    public function test_bad_package_list_missing_only_debug()
+    public function test_bad_package_list_missing_load()
     {
         $provider = new  DefaultPackageProviderService($this->app,['Test'=>[
             'env'=>'ALL',
         ]],[]);
         $error = $provider->validatePackageList();
+        $this->assertStringContainsString($error, "Missing 'load' parameter on Test configuration");
+    }
+
+
+    public function test_bad_package_list_missing_only_debug()
+    {
+        $provider = new  DefaultPackageProviderService($this->app,['Test'=>[
+            'env'=>'ALL',
+            'load'=>true,
+        ]],[]);
+        $error = $provider->validatePackageList();
         $this->assertStringContainsString($error, "Missing 'only_debug' parameter on Test configuration");
     }
+
     public function test_bad_package_list_missing_debug()
     {
         $provider = new  DefaultPackageProviderService($this->app,['Test'=>[
             'env'=>'ALL',
+            'load'=>true,
             'only_debug' => false,
         ]],[]);
         $error = $provider->validatePackageList();
@@ -51,6 +64,7 @@ class DefaultPackageProviderServiceTest  extends \Orchestra\Testbench\TestCase
     {
         $provider = new  DefaultPackageProviderService($this->app,['Test'=>[
             'env'=>'ALL',
+            'load'=>true,
             'only_debug' => false,
             'debug' => true
         ]],[]);
@@ -62,6 +76,7 @@ class DefaultPackageProviderServiceTest  extends \Orchestra\Testbench\TestCase
     {
         $provider = new  DefaultPackageProviderService($this->app,['Test'=>[
             'env'=>'ALL',
+            'load'=>true,
             'only_debug' => false,
             'debug' => true,
             'package_provider' => 'Gianfriaur\PackageLoader\Tests\Service\DefaultPackageProviderService\TestBadPackageProvider'
@@ -74,6 +89,7 @@ class DefaultPackageProviderServiceTest  extends \Orchestra\Testbench\TestCase
     {
         $provider = new  DefaultPackageProviderService($this->app,['Test'=>[
             'env'=>'ALL',
+            'load'=>true,
             'only_debug' => false,
             'debug' => true,
             'package_provider' => 'Gianfriaur\PackageLoader\Tests\Service\DefaultPackageProviderService\TestBadPackageProvider'
@@ -90,6 +106,7 @@ class DefaultPackageProviderServiceTest  extends \Orchestra\Testbench\TestCase
     {
         $provider = new  DefaultPackageProviderService($this->app,['Test'=>[
             'env'=>'ALL',
+            'load'=>true,
             'only_debug' => false,
             'debug' => true,
             'package_provider' => 'Gianfriaur\PackageLoader\Tests\Service\DefaultPackageProviderService\TestValidPackageProvider'

@@ -4,18 +4,6 @@ return[
 
     /*
     |--------------------------------------------------------------------------
-    | Resource File
-    |--------------------------------------------------------------------------
-    |
-    | Defines the file from which to get the packages to be registered
-    | in the application
-    |
-    */
-
-    'resource_file' => base_path('load_packages.json'),
-
-    /*
-    |--------------------------------------------------------------------------
     | Package Service Provider
     |--------------------------------------------------------------------------
     |
@@ -23,6 +11,34 @@ return[
     |
     */
     'provider' => 'default',
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Packages List Loader
+    |--------------------------------------------------------------------------
+    |
+    | Define here which Packages List Loader to use
+    |
+    */
+    'loader' => 'json_file',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Packages List Loader List
+    |--------------------------------------------------------------------------
+    |
+    | Here all possible Packages List Loader are defined with their default options
+    |
+    */
+    'package_list_loaders'=>[
+        'json_file'=>[
+            'class'=> \Gianfriaur\PackageLoader\Service\PackagesListLoaderService\JsonFilePackagesListLoaderService::class,
+            'options'=>[
+                'resource_file' => base_path('packages.json')
+            ]
+        ]
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -34,11 +50,11 @@ return[
     */
     'package_service_providers'=> [
         'default'=>[
-            'class'=>Gianfriaur\PackageLoader\Service\DefaultPackageProviderService::class,
+            'class'=> \Gianfriaur\PackageLoader\Service\PackageProviderService\DefaultPackageProviderService::class,
             'options'=>[]
         ],
         'composer'=>[
-            'class'=>Gianfriaur\PackageLoader\Service\ComposerPackageProviderService::class,
+            'class'=> \Gianfriaur\PackageLoader\Service\PackageProviderService\ComposerPackageProviderService::class,
             'options'=>[
                 // ex: in Custom package the provider is named CustomPackageProvider
                 'suffix'=>'PackageProvider',

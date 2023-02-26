@@ -4,8 +4,10 @@ namespace Gianfriaur\PackageLoader\ServiceProvider;
 
 use Gianfriaur\PackageLoader\Exception\BadPackageListException;
 use Gianfriaur\PackageLoader\Exception\BadPackageProviderServiceInterfaceException;
+use Gianfriaur\PackageLoader\Exception\BadPackagesListLoaderServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\PackageLoaderMissingConfigException;
-use Gianfriaur\PackageLoader\Service\PackageProviderServiceInterface;
+use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
+use Gianfriaur\PackageLoader\Service\PackagesListLoaderService\PackagesListLoaderServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class PackageLoaderServiceProvider extends ServiceProvider
@@ -23,6 +25,8 @@ class PackageLoaderServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerConfig();
+
+        $this->registerPackagesListLoader();
 
         //register singleton of PackageServiceProviderInterface on alias package_loader.package_service_provider
         $this->registerPackageServiceProvider();
@@ -43,26 +47,55 @@ class PackageLoaderServiceProvider extends ServiceProvider
         );
     }
 
-    private function getPackageServiceProviderDefinition() {
-        $provider = $this->getConfig('provider');
-        $providers = $this->getConfig('package_service_providers');
-        return [$providers[$provider]['class'],$providers[$provider]['options']];
+    private function getPackagesListLoaderServiceDefinition()
+    {
+        $loader  = $this->getConfig('loader');
+        $loaders = $this->getConfig('package_list_loaders');
+        return [$loaders[ $loader ][ 'class' ], $loaders[ $loader ][ 'options' ]];
     }
+
+
+    private function getPackageServiceProviderDefinition()
+    {
+        $provider  = $this->getConfig('provider');
+        $providers = $this->getConfig('package_service_providers');
+        return [$providers[ $provider ][ 'class' ], $providers[ $provider ][ 'options' ]];
+    }
+
+    private function registerPackagesListLoader(): void
+    {
+        [$packages_list_loader_class, $packages_list_loader_options] = $this->getPackagesListLoaderServiceDefinition();
+
+        if ( !is_subclass_of($packages_list_loader_class, PackagesListLoaderServiceInterface::class) ) {
+            throw new BadPackagesListLoaderServiceInterfaceException($packages_list_loader_class);
+        }
+
+        // register singleton of packages_list_loader
+        $this->app->singleton(PackagesListLoaderServiceInterface::class, function ($app) use ($packages_list_loader_class, $packages_list_loader_options) {
+            return new $packages_list_loader_class($app, $packages_list_loader_options);
+        });
+        // add alias of PackagesListLoaderServiceInterface::class on package_loader.packages_list_loader
+        $this->app->alias(PackagesListLoaderServiceInterface::class, 'package_loader.packages_list_loader');
+
+    }
+
 
     private function registerPackageServiceProvider(): void
     {
-        [$package_service_provider_class,$package_service_provider_options] = $this->getPackageServiceProviderDefinition();
+        [$package_service_provider_class, $package_service_provider_options] = $this->getPackageServiceProviderDefinition();
 
         if ( !is_subclass_of($package_service_provider_class, PackageProviderServiceInterface::class) ) {
             throw new BadPackageProviderServiceInterfaceException($package_service_provider_class);
         }
 
-        // retrieve package List
-        $package_list = $this->getLoadPackages();
+        /** @var PackagesListLoaderServiceInterface $package_list_loader */
+        $package_list_loader = $this->app->get(PackagesListLoaderServiceInterface::class);
+        // retrieve package_list
+        $package_list = $package_list_loader->getPackagesList();
 
         // register singleton of package_service_provider
-        $this->app->singleton(PackageProviderServiceInterface::class, function ($app) use ($package_service_provider_class, $package_list,$package_service_provider_options) {
-            return new $package_service_provider_class($app, $package_list,$package_service_provider_options);
+        $this->app->singleton(PackageProviderServiceInterface::class, function ($app) use ($package_service_provider_class, $package_list, $package_service_provider_options) {
+            return new $package_service_provider_class($app, $package_list, $package_service_provider_options);
         });
         // add alias of $package_service_provider_class::class on package_loader.package_service_provider
         $this->app->alias(PackageProviderServiceInterface::class, 'package_loader.package_service_provider');
@@ -83,17 +116,6 @@ class PackageLoaderServiceProvider extends ServiceProvider
         // load all packages
         $package_service_provider->load();
 
-    }
-
-    private function getLoadPackages(): array
-    {
-        $resource_file = $this->getConfig('resource_file');
-
-        if ( !file_exists($resource_file) ) {
-            throw new BadPackageListException('File missing');
-        }
-
-        return json_decode(file_get_contents($resource_file), true);
     }
 
     private function getConfig($name): mixed
