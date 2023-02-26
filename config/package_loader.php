@@ -19,8 +19,27 @@ return[
     | Package Service Provider
     |--------------------------------------------------------------------------
     |
-    | TODO: description
+    | Define here which Package Service Provider to use
     |
     */
-    'package_service_provider' => Gianfriaur\PackageLoader\Service\DefaultPackageProviderService::class
+    'provider' => 'default',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Package Service Providers List
+    |--------------------------------------------------------------------------
+    |
+    | Here all possible Package Service Providers are defined with their options
+    |
+    */
+    'package_service_providers'=> [
+        'default'=>[
+            'class'=>Gianfriaur\PackageLoader\Service\DefaultPackageProviderService::class,
+            'options'=>[]
+        ],
+        'composer'=>[
+            'class'=>Gianfriaur\PackageLoader\Service\ComposerPackageProviderService::class,
+            'options'=>[]
+        ]
+    ]
 ];

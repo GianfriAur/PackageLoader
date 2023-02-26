@@ -43,10 +43,15 @@ class PackageLoaderServiceProvider extends ServiceProvider
         );
     }
 
+    private function getPackageServiceProviderDefinition() {
+        $provider = $this->getConfig('provider');
+        $providers = $this->getConfig('package_service_providers');
+        return [$providers[$provider]['class'],$providers[$provider]['options']];
+    }
 
     private function registerPackageServiceProvider(): void
     {
-        $package_service_provider_class = $this->getConfig('package_service_provider');
+        [$package_service_provider_class,$package_service_provider_options] = $this->getPackageServiceProviderDefinition();
 
         if ( !is_subclass_of($package_service_provider_class, PackageProviderServiceInterface::class) ) {
             throw new BadPackageProviderServiceInterfaceException($package_service_provider_class);
@@ -56,8 +61,8 @@ class PackageLoaderServiceProvider extends ServiceProvider
         $package_list = $this->getLoadPackages();
 
         // register singleton of package_service_provider
-        $this->app->singleton(PackageProviderServiceInterface::class, function ($app) use ($package_service_provider_class, $package_list) {
-            return new $package_service_provider_class($app, $package_list);
+        $this->app->singleton(PackageProviderServiceInterface::class, function ($app) use ($package_service_provider_class, $package_list,$package_service_provider_options) {
+            return new $package_service_provider_class($app, $package_list,$package_service_provider_options);
         });
         // add alias of $package_service_provider_class::class on package_loader.package_service_provider
         $this->app->alias(PackageProviderServiceInterface::class, 'package_loader.package_service_provider');

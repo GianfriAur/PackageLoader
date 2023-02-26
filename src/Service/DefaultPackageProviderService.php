@@ -33,7 +33,7 @@ readonly class DefaultPackageProviderService implements PackageProviderServiceIn
      *     namespace:string
      * }> $packages_list
      */
-    public function __construct(protected Application $app, protected array $packages_list) { }
+    public function __construct(protected Application $app, protected array $packages_list, protected array $options) { }
 
     public function validatePackageList(): bool|string
     {
