@@ -2,18 +2,26 @@
 
 namespace Gianfriaur\PackageLoader\ServiceProvider;
 
+use Gianfriaur\PackageLoader\Console\Commands\DisablePackageCommand;
+use Gianfriaur\PackageLoader\Console\Commands\EnablePackageCommand;
 use Gianfriaur\PackageLoader\Exception\BadPackageListException;
 use Gianfriaur\PackageLoader\Exception\BadPackageProviderServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\BadPackagesListLoaderServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\PackageLoaderMissingConfigException;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
 use Gianfriaur\PackageLoader\Service\PackagesListLoaderService\PackagesListLoaderServiceInterface;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
-class PackageLoaderServiceProvider extends ServiceProvider
+class PackageLoaderServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     const CONFIG_NAMESPACE = "package_loader";
     const CONFIG_FILE_NANE = "package_loader.php";
+
+    protected array $commands = [
+        EnablePackageCommand::class,
+        DisablePackageCommand::class
+    ];
 
     protected PackageProviderServiceInterface $packageServiceProvider;
 
@@ -31,6 +39,12 @@ class PackageLoaderServiceProvider extends ServiceProvider
         //register singleton of PackageServiceProviderInterface on alias package_loader.package_service_provider
         $this->registerPackageServiceProvider();
         $this->loadPackageServiceProvider();
+
+
+        if ($this->app->runningInConsole()){
+            $this->registerCommands();
+        }
+
     }
 
     private function bootConfig(): void
@@ -45,6 +59,10 @@ class PackageLoaderServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/../../config/' . self::CONFIG_FILE_NANE, self::CONFIG_NAMESPACE
         );
+    }
+
+    private function registerCommands(){
+        $this->commands(array_values($this->commands));
     }
 
     private function getPackagesListLoaderServiceDefinition()
@@ -125,5 +143,6 @@ class PackageLoaderServiceProvider extends ServiceProvider
         }
         return $config;
     }
+
 
 }
