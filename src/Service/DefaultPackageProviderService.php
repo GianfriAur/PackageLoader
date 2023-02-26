@@ -16,8 +16,7 @@ use Illuminate\Foundation\Application;
  *          "env":"string",
  *          "only_debug": bool,
  *          "debug": bool,
- *          "vendor": "string",
- *          "namespace": "string"
+ *          "package_provider": "string"
  *      },
  *      ....
  * }
@@ -30,8 +29,9 @@ readonly class DefaultPackageProviderService implements PackageProviderServiceIn
      *     env:string,
      *     only_debug:bool,
      *     debug:bool,
-     *     namespace:string
+     *     package_provider:string
      * }> $packages_list
+     * @param array{} $options
      */
     public function __construct(protected Application $app, protected array $packages_list, protected array $options) { }
 
@@ -44,7 +44,7 @@ readonly class DefaultPackageProviderService implements PackageProviderServiceIn
             if ( !array_key_exists('env', $package_name_config) ) return "Missing 'env' parameter on $package_name configuration";                         // assert env exist
             if ( !array_key_exists('only_debug', $package_name_config) ) return "Missing 'only_debug' parameter on $package_name configuration";           // assert only_debug exist
             if ( !array_key_exists('debug', $package_name_config) ) return "Missing 'debug' parameter on $package_name configuration";                     // assert debug exist
-            if ( !array_key_exists('namespace', $package_name_config) ) return "Missing 'namespace' parameter on $package_name configuration";             // assert namespace exist
+            if ( !array_key_exists('package_provider', $package_name_config) ) return "Missing 'package_provider' parameter on $package_name configuration";             // assert package_provider exist
 
         }
         return true;
@@ -58,7 +58,7 @@ readonly class DefaultPackageProviderService implements PackageProviderServiceIn
         foreach ($this->packages_list as $package_name => $package_name_config) {
             if ( $package_name_config[ 'env' ] === 'ALL' || $env === $package_name_config[ 'env' ] ) {
                 if ( $package_name_config[ 'only_debug' ] === false || ($package_name_config[ 'only_debug' ] === $debug && $debug === true) ) {
-                    $package_provider_class= $package_name_config['namespace'].'\\PackageProvider\\'.$package_name.'PackageProvider';
+                    $package_provider_class= $package_name_config['package_provider'];
                     if (!class_exists($package_provider_class)){
                         throw new MissingPackageProviderException($package_provider_class);
                     }

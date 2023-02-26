@@ -39,7 +39,12 @@ return[
         ],
         'composer'=>[
             'class'=>Gianfriaur\PackageLoader\Service\ComposerPackageProviderService::class,
-            'options'=>[]
+            'options'=>[
+                // ex: in Custom package the provider is named CustomPackageProvider
+                'suffix'=>'PackageProvider',
+                // ex: in Custom package the provider is under psr-4/PackageProvider/CustomPackageProvider
+                'namespace'=>'PackageProvider'
+            ]
         ]
     ]
 ];

@@ -9,6 +9,7 @@ interface PackageProviderServiceInterface
     /**
      * @param Application $app
      * @param array<string,array> $packages_list
+     * @param array $options
      */
     public function __construct(Application $app, array $packages_list, array $options);
 

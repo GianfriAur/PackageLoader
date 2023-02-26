@@ -4,6 +4,8 @@ namespace Gianfriaur\PackageLoader\Service;
 
 use Gianfriaur\PackageLoader\Exception\BadPackageListException;
 use Gianfriaur\PackageLoader\Exception\MissingPackageProviderException;
+use Gianfriaur\PackageLoader\Exception\MissingPackageProviderServiceOptionException;
+use Gianfriaur\PackageLoader\Exception\PackageLoaderMissingConfigException;
 use Gianfriaur\PackageLoader\PackageProvider\AbstractPackageProvider;
 use Illuminate\Foundation\Application;
 
@@ -34,8 +36,20 @@ readonly class ComposerPackageProviderService implements PackageProviderServiceI
      *     debug:bool,
      *     vendor:string,
      * }> $packages_list
+     * @param array{
+     *     suffix:string,
+     *     namespace:string
+     * } $options
      */
     public function __construct(protected Application $app, protected array $packages_list, protected array $options) { }
+
+    private function getOption($name): mixed
+    {
+        if (!array_key_exists($name, $this->options)){
+            throw new MissingPackageProviderServiceOptionException($name,$this);
+        }
+        return $this->options[$name];
+    }
 
     public function validatePackageList(): bool|string
     {
@@ -52,7 +66,7 @@ readonly class ComposerPackageProviderService implements PackageProviderServiceI
     }
 
     private function generateClassName(string $namespace,string $package_name):string{
-        return str_replace('\\\\','\\', $namespace . '\\PackageProvider\\' . $package_name . 'PackageProvider');
+        return str_replace('\\\\','\\', $namespace . '\\'.$this->getOption('namespace').'\\' . $package_name . $this->getOption('suffix'));
     }
 
     public function load(): void
