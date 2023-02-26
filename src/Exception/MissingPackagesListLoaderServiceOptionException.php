@@ -2,7 +2,6 @@
 
 namespace Gianfriaur\PackageLoader\Exception;
 
-use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
 use Gianfriaur\PackageLoader\Service\PackagesListLoaderService\PackagesListLoaderServiceInterface;
 use Gianfriaur\PackageLoader\ServiceProvider\PackageLoaderServiceProvider;
 use Throwable;

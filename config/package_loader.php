@@ -4,6 +4,16 @@ return[
 
     /*
     |--------------------------------------------------------------------------
+    | Packages List Loader
+    |--------------------------------------------------------------------------
+    |
+    | Define here which Packages List Loader to use
+    |
+    */
+    'loader' => 'json_file',
+
+    /*
+    |--------------------------------------------------------------------------
     | Package Service Provider
     |--------------------------------------------------------------------------
     |
@@ -12,16 +22,17 @@ return[
     */
     'provider' => 'default',
 
-
     /*
     |--------------------------------------------------------------------------
-    | Packages List Loader
+    | Migration Strategy
     |--------------------------------------------------------------------------
     |
-    | Define here which Packages List Loader to use
+    | Use 'default' for using a default laravel migration
+    | Use 'vault' for managing package parallel migrations
+    | Use null to not load migration management
     |
     */
-    'loader' => 'json_file',
+    'migration_strategy' => 'vault',
 
     /*
     |--------------------------------------------------------------------------
@@ -58,9 +69,30 @@ return[
             'options'=>[
                 // ex: in Custom package the provider is named CustomPackageProvider
                 'suffix'=>'PackageProvider',
-                // ex: in Custom package the provider is under psr-4/PackageProvider/CustomPackageProvider
+                // ex: in Custom package the provider is under [ composer psr-4 ]/PackageProvider/Custom[ suffix ]
                 'namespace'=>'PackageProvider'
             ]
         ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Migration Strategy List
+    |--------------------------------------------------------------------------
+    |
+    | Here all possible Migration Strategy are defined with their options
+    |
+    */
+    'migration_strategies'=>[
+        'default' =>[
+            'class'=> \Gianfriaur\PackageLoader\Service\MigrationStrategyService\DefaultMigrationStrategyServiceService::class,
+            'options'=>[]
+        ],
+        'vault' =>[
+            'class'=> \Gianfriaur\PackageLoader\Service\MigrationStrategyService\VaultMigrationStrategyServiceService::class,
+            'options'=>[
+                'table'=>'packages_migrations'
+            ]
+        ],
     ]
 ];
