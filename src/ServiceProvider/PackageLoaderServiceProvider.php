@@ -11,7 +11,7 @@ use Illuminate\Support\ServiceProvider;
 class PackageLoaderServiceProvider extends ServiceProvider
 {
     const CONFIG_NAMESPACE = "package_loader";
-    const CONFIG_FILE_NANE = "package-loader.php";
+    const CONFIG_FILE_NANE = "package_loader.php";
 
     protected PackageProviderServiceInterface $packageServiceProvider;
 

@@ -22,5 +22,5 @@ return[
     | TODO: description
     |
     */
-    'package_service_provider' => Gianfriaur\PackageLoader\Service\PackageProviderService::class
+    'package_service_provider' => Gianfriaur\PackageLoader\Service\DefaultPackageProviderService::class
 ];

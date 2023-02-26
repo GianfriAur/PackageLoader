@@ -8,13 +8,7 @@ interface PackageProviderServiceInterface
 {
     /**
      * @param Application $app
-     * @param array<string,array{
-     *     env:string,
-     *     only_debug:bool,
-     *     debug:bool,
-     *     vendor:string,
-     *     namespace:string
-     * }> $packages_list
+     * @param array<string,array> $packages_list
      */
     public function __construct(Application $app, array $packages_list);
 

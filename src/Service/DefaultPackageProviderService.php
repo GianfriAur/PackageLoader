@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection DuplicatedCode */
 
 namespace Gianfriaur\PackageLoader\Service;
 
@@ -22,7 +22,7 @@ use Illuminate\Foundation\Application;
  *      ....
  * }
  */
-class PackageProviderService implements PackageProviderServiceInterface
+readonly class DefaultPackageProviderService implements PackageProviderServiceInterface
 {
     /**
      * @param Application $app
@@ -30,11 +30,10 @@ class PackageProviderService implements PackageProviderServiceInterface
      *     env:string,
      *     only_debug:bool,
      *     debug:bool,
-     *     vendor:string,
      *     namespace:string
      * }> $packages_list
      */
-    public function __construct(protected readonly Application $app, protected readonly array $packages_list) { }
+    public function __construct(protected Application $app, protected array $packages_list) { }
 
     public function validatePackageList(): bool|string
     {
@@ -45,8 +44,6 @@ class PackageProviderService implements PackageProviderServiceInterface
             if ( !array_key_exists('env', $package_name_config) ) return "Missing 'env' parameter on $package_name configuration";                         // assert env exist
             if ( !array_key_exists('only_debug', $package_name_config) ) return "Missing 'only_debug' parameter on $package_name configuration";           // assert only_debug exist
             if ( !array_key_exists('debug', $package_name_config) ) return "Missing 'debug' parameter on $package_name configuration";                     // assert debug exist
-            if ( !array_key_exists('vendor', $package_name_config) ) return "Missing 'vendor' parameter on $package_name configuration";                   // assert vendor exist
-            // TODO: namespace optional if vendor/**/**/composer.json contain a ./src psr-4 ROLE
             if ( !array_key_exists('namespace', $package_name_config) ) return "Missing 'namespace' parameter on $package_name configuration";             // assert namespace exist
 
         }
@@ -63,7 +60,7 @@ class PackageProviderService implements PackageProviderServiceInterface
                 if ( $package_name_config[ 'only_debug' ] === false || ($package_name_config[ 'only_debug' ] === $debug && $debug === true) ) {
                     $package_provider_class= $package_name_config['namespace'].'\\PackageProvider\\'.$package_name.'PackageProvider';
                     if (!class_exists($package_provider_class)){
-                        throw new MissingPackageProviderException($package_provider_class,$package_name_config['vendor'] );
+                        throw new MissingPackageProviderException($package_provider_class);
                     }
 
                     /** @var AbstractPackageProvider $package_provider */
