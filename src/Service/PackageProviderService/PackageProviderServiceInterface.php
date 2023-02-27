@@ -2,6 +2,7 @@
 
 namespace Gianfriaur\PackageLoader\Service\PackageProviderService;
 
+use Gianfriaur\PackageLoader\PackageProvider\AbstractPackageProvider;
 use Illuminate\Foundation\Application;
 
 interface PackageProviderServiceInterface
@@ -24,4 +25,11 @@ interface PackageProviderServiceInterface
      * @return bool|string
      */
     function validatePackageList():bool|string;
+
+    /**
+     * @return array<string, AbstractPackageProvider>
+     */
+    function getPackageProviders():array;
+
+    function getPackageProvider(string $name):AbstractPackageProvider;
 }

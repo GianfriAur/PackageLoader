@@ -10,7 +10,7 @@ use Illuminate\Database\Query\Builder;
  * This strategy uses the native laravel one with a bridge
  * between package.migration.repository  migration.repository
  */
-readonly class VaultPackageMigrationRepository implements PackageMigrationRepositoryInterface
+class VaultPackageMigrationRepository implements PackageMigrationRepositoryInterface
 {
 
     /**
@@ -21,7 +21,7 @@ readonly class VaultPackageMigrationRepository implements PackageMigrationReposi
     /**
      * Create a new database migration repository instance.
      */
-    public function __construct(private Resolver $resolver, private string $table)
+    public function __construct(private readonly Resolver $resolver, private readonly string $table)
     {
     }
 

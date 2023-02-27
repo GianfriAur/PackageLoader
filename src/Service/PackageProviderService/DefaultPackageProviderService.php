@@ -4,6 +4,7 @@ namespace Gianfriaur\PackageLoader\Service\PackageProviderService;
 
 use Gianfriaur\PackageLoader\Exception\BadPackageProviderException;
 use Gianfriaur\PackageLoader\Exception\MissingPackageProviderException;
+use Gianfriaur\PackageLoader\Exception\PackageProviderNotFoundException;
 use Gianfriaur\PackageLoader\PackageProvider\AbstractPackageProvider;
 use Illuminate\Foundation\Application;
 
@@ -22,7 +23,7 @@ use Illuminate\Foundation\Application;
  *      ....
  * }
  */
-readonly class DefaultPackageProviderService implements PackageProviderServiceInterface
+class DefaultPackageProviderService implements PackageProviderServiceInterface
 {
     /**
      * @param Application $app
@@ -34,7 +35,15 @@ readonly class DefaultPackageProviderService implements PackageProviderServiceIn
      * }> $packages_list
      * @param array{} $options
      */
-    public function __construct(protected Application $app, protected array $packages_list, protected array $options) { }
+    public function __construct(protected readonly Application $app, protected readonly array $packages_list, protected readonly array $options)
+    {
+        $this->packages_cache_list = [];
+    }
+
+    /**
+     * @var array<string,AbstractPackageProvider>
+     */
+    protected array $packages_cache_list;
 
     public function validatePackageList(): bool|string
     {
@@ -72,11 +81,25 @@ readonly class DefaultPackageProviderService implements PackageProviderServiceIn
                     /** @var AbstractPackageProvider $package_provider */
                     $package_provider = new $package_provider_class($this->app, $this, $package_name_config[ 'debug' ]);
 
+                    $this->packages_cache_list[$package_name] = $package_provider;
 
                     $this->app->register($package_provider);
 
                 }
             }
         }
+    }
+
+    function getPackageProviders(): array
+    {
+        return $this->packages_cache_list;
+    }
+
+    function getPackageProvider(string $name): AbstractPackageProvider
+    {
+        if (!$package = $this->packages_cache_list[$name]){
+            throw new PackageProviderNotFoundException($name, array_keys($this->packages_cache_list));
+        }
+        return $package;
     }
 }

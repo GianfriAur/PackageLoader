@@ -2,8 +2,12 @@
 
 namespace Gianfriaur\PackageLoader\Service\MigrationStrategyService;
 
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseInstallCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseStatusCommand;
 use Gianfriaur\PackageLoader\Repository\DefaultPackageMigrationRepository;
 use Gianfriaur\PackageLoader\Repository\PackageMigrationRepositoryInterface;
+use Illuminate\Database\Migrations\MigrationCreator;
+use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Foundation\Application;
 
 readonly class DefaultMigrationStrategyServiceService implements MigrationStrategyServiceInterface
@@ -14,8 +18,28 @@ readonly class DefaultMigrationStrategyServiceService implements MigrationStrate
     {
     }
 
-    public function getMigrationRepository(): PackageMigrationRepositoryInterface
+    public function getMigrationRepository(): PackageMigrationRepositoryInterface|null
     {
-        return new DefaultPackageMigrationRepository($this->app->get('migration.repository') );
+        return null;
+    }
+
+    public function getMigrator(): Migrator|null
+    {
+        return null;
+    }
+
+    public function getCreator(): MigrationCreator|null
+    {
+        return null;
+    }
+
+    public function getInstallCommand(): BaseInstallCommand|null
+    {
+        return null;
+    }
+
+    public function getStatusCommand(): BaseStatusCommand|null
+    {
+        return null;
     }
 }

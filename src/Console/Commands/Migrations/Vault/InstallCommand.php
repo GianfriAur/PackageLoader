@@ -1,17 +1,14 @@
 <?php
 
-namespace Gianfriaur\PackageLoader\Console\Commands\Migrations;
+namespace Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault;
 
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseInstallCommand;
 use Gianfriaur\PackageLoader\Repository\PackageMigrationRepositoryInterface;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
-class InstallCommand extends Command
+class InstallCommand extends BaseInstallCommand
 {
-    protected $name = 'package-loader:migrate:install';
-
-    protected $description = 'Create the package migration repository';
-
     public function __construct(private readonly  PackageMigrationRepositoryInterface $repository)
     {
         parent::__construct();

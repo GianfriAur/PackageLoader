@@ -40,6 +40,8 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
      */
     public function register(): void
     {
+      //  $start = hrtime(true);
+
         $this->registerConfig();
 
         $this->registerPackagesListLoader();
@@ -48,15 +50,22 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         $this->registerPackageServiceProvider();
         $this->loadPackageServiceProvider();
 
-        $has_migration = $this->registerMigrationStrategyService();
+        $has_migration_strategy = $this->registerMigrationStrategyService();
 
         if ($this->app->runningInConsole()) {
             $this->registerCommands();
 
-            if ($has_migration){
+            if ($has_migration_strategy){
                 $this->registerPackageMigrationServiceProvider();
+            }else{
+                //TODO: $this->registerMigrationPublishCommand();
             }
         }
+      //  $end = hrtime(true);
+     //   $eta = $end - $start;
+// convert nanoseconds to milliseconds
+     //   $eta /= 1e+6;
+     //   dd("Code block was running for $eta milliseconds");
 
     }
 
@@ -95,7 +104,7 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
 
     private function getMigrationStrategyServiceDefinition(): array|null
     {
-        $migration_strategy = $this->getConfig('migration_strategy');
+        $migration_strategy = $this->getConfig('migration_strategy', true);
         if ($migration_strategy === null) return [null, []];
         $migration_strategies = $this->getConfig('migration_strategies');
         return [$migration_strategies[$migration_strategy]['class'], $migration_strategies[$migration_strategy]['options']];
@@ -182,10 +191,10 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
 
     }
 
-    private function getConfig($name): mixed
+    private function getConfig($name, bool $nullable = false): mixed
     {
         if (!$config = config(self::CONFIG_NAMESPACE . '.' . $name)) {
-            throw new PackageLoaderMissingConfigException($name);
+            if (!$nullable) throw new PackageLoaderMissingConfigException($name);
         }
         return $config;
     }
