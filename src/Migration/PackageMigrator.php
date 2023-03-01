@@ -158,4 +158,35 @@ class PackageMigrator extends BaseMigrator
         $this->repository->delete($package,$migration);
     }
 
+    public function resetPackage(string $package, $paths = [], $pretend = false)
+    {
+        $migrations = array_reverse($this->repository->getRan($package));
+
+        if (count($migrations) === 0) {
+            $this->write(Info::class, 'Nothing to rollback for <fg=green>'.$package.'</>.');
+
+            return [];
+        }
+
+        return tap($this->resetMigrationsPackage($package,$migrations, $paths, $pretend), function () {
+            if ($this->output) {
+                $this->output->writeln('');
+            }
+        });
+    }
+
+    protected function resetMigrationsPackage(string $package,array $migrations, array $paths, $pretend = false)
+    {
+        $migrations = collect($migrations)->map(function ($m) {
+            return (object) ['migration' => $m];
+        })->all();
+
+        $options = compact('pretend');
+        $options['package'] = $package;
+
+        return $this->rollbackMigrations(
+            $migrations, $paths, $options,
+        );
+    }
+
 }

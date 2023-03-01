@@ -2,7 +2,9 @@
 
 namespace Gianfriaur\PackageLoader\Service\MigrationStrategyService;
 
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseResetCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRollbackCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\ResetCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\RollbackCommand;
 use Illuminate\Contracts\Events\Dispatcher;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseInstallCommand;
@@ -104,5 +106,13 @@ readonly class VaultMigrationStrategyServiceService implements MigrationStrategy
         $package_service_provider = $this->app->get('package_loader.package_service_provider');
 
         return new RollbackCommand($migrator,$package_service_provider );
+    }
+
+    public function getResetCommand(): BaseResetCommand|null
+    {
+        $migrator = $this->app->get('package_loader.migrator');
+        $package_service_provider = $this->app->get('package_loader.package_service_provider');
+
+        return new ResetCommand($migrator,$package_service_provider );
     }
 }

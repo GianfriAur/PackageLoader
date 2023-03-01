@@ -5,6 +5,7 @@ namespace Gianfriaur\PackageLoader\Service\MigrationStrategyService;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseInstallCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateMakeCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseResetCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRollbackCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseStatusCommand;
 use Gianfriaur\PackageLoader\Repository\PackageMigrationRepositoryInterface;
@@ -38,28 +39,43 @@ interface MigrationStrategyServiceInterface
      */
     public function getCreator(): MigrationCreator|null;
 
-
+    /**
+     * return new BaseInstallCommand if your strategy has a custom migration migrate command
+     * return null if your strategy hasn't any migration migrate command
+     */
     public function getMigrateCommand(): BaseMigrateCommand|null;
+
     //TODO: public function getFreshCommand():null;
 
     /**
      * return new BaseInstallCommand if your strategy has a custom migration install command
      * return null if your strategy hasn't any migration install command
-     * @return BaseInstallCommand|null
      */
     public function getInstallCommand(): BaseInstallCommand|null;
 
     //TODO: public function getRefreshCommand():null;
-    //TODO: public function getResetCommand():null;
+
+    /**
+     * return new BaseResetCommand if your strategy has a custom migration reset command
+     * return null if your strategy hasn't any migration reset command
+     */
+    public function getResetCommand(): BaseResetCommand|null;
+
+    /**
+     * return new BaseRollbackCommand if your strategy has a custom migration rollback command
+     * return null if your strategy hasn't any migration rollback command
+     */
     public function getRollbackCommand(): BaseRollbackCommand|null;
 
     /**
      * return new BaseInstallCommand if your strategy has a custom migration status command
      * return null if your strategy hasn't any migration status command
-     * @return BaseStatusCommand|null
      */
     public function getStatusCommand(): BaseStatusCommand|null;
 
-
+    /**
+     * return new BaseMigrateMakeCommand if your strategy has a custom migration make command
+     * return null if your strategy hasn't any migration make command
+     */
     public function getMigrateMakeCommand(): BaseMigrateMakeCommand|null;
 }

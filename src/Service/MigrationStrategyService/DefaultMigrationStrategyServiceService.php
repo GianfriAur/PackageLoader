@@ -5,6 +5,7 @@ namespace Gianfriaur\PackageLoader\Service\MigrationStrategyService;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseInstallCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateMakeCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseResetCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRollbackCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseStatusCommand;
 use Gianfriaur\PackageLoader\Repository\DefaultPackageMigrationRepository;
@@ -59,5 +60,10 @@ readonly class DefaultMigrationStrategyServiceService implements MigrationStrate
     public function getRollbackCommand(): BaseRollbackCommand|null
     {
        return null;
+    }
+
+    public function getResetCommand(): BaseResetCommand|null
+    {
+        return null;
     }
 }

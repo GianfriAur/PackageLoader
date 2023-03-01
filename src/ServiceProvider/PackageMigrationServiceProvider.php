@@ -71,7 +71,7 @@ class PackageMigrationServiceProvider extends ServiceProvider implements Deferra
             //TODO: $this->migrationStrategyService->getFreshCommand(),
             $this->migrationStrategyService->getInstallCommand(),
             //TODO: $this->migrationStrategyService->getRefreshCommand(),
-            //TODO: $this->migrationStrategyService->getResetCommand(),
+            $this->migrationStrategyService->getResetCommand(),
             $this->migrationStrategyService->getRollbackCommand(),
             $this->migrationStrategyService->getStatusCommand(),
             $this->migrationStrategyService->getMigrateMakeCommand()
