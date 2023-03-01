@@ -25,7 +25,6 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         DisablePackageCommand::class
     ];
 
-    protected PackageProviderServiceInterface $packageServiceProvider;
 
     public function boot(): void
     {
@@ -41,6 +40,7 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
     public function register(): void
     {
       //  $start = hrtime(true);
+
 
         $this->registerConfig();
 

@@ -2,9 +2,16 @@
 
 namespace Gianfriaur\PackageLoader\Service\MigrationStrategyService;
 
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRollbackCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\RollbackCommand;
+use Illuminate\Contracts\Events\Dispatcher;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseInstallCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateMakeCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseStatusCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\InstallCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\MigrateCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\MigrateMakeCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\StatusCommand;
 use Gianfriaur\PackageLoader\Exception\MissingMigrationStrategyServiceOptionException;
 use Gianfriaur\PackageLoader\Migration\PackageMigrator;
@@ -34,6 +41,7 @@ readonly class VaultMigrationStrategyServiceService implements MigrationStrategy
     {
         $db = $this->app->get('db');
         $table = $this->getOption('table');
+
         return new VaultPackageMigrationRepository($db,$table );
     }
 
@@ -43,6 +51,7 @@ readonly class VaultMigrationStrategyServiceService implements MigrationStrategy
         $db = $this->app->get('db');
         $files = $this->app->get('files');
         $events = $this->app->get('events');
+
         return new PackageMigrator($repository, $db, $files, $events);
     }
 
@@ -50,12 +59,14 @@ readonly class VaultMigrationStrategyServiceService implements MigrationStrategy
     {
         $files = $this->app->get('files');
         $stubs = $this->app->basePath('stubs');
+
         return new MigrationCreator($files, $stubs);
     }
 
     public function getInstallCommand(): BaseInstallCommand|null
     {
         $repository = $this->app->get('package_loader.migration.repository');
+
         return new InstallCommand($repository);
     }
 
@@ -65,5 +76,33 @@ readonly class VaultMigrationStrategyServiceService implements MigrationStrategy
         $package_service_provider = $this->app->get('package_loader.package_service_provider');
 
         return new StatusCommand($migrator,$package_service_provider);
+    }
+
+    public function getMigrateMakeCommand(): BaseMigrateMakeCommand|null
+    {
+        $creator =$this->app->get('package_loader.migration.creator');
+        // TODEFINE: ??? $this->app->get('composer') ??? not work
+       // $composer = $this->app->get(\Illuminate\Support\Composer::class);
+        $package_service_provider = $this->app->get('package_loader.package_service_provider');
+
+       return new MigrateMakeCommand($creator,null,$package_service_provider);
+    }
+
+    public function getMigrateCommand(): BaseMigrateCommand|null
+    {
+
+        $migrator = $this->app->get('package_loader.migrator');
+        $dispatcher  =$this->app->get(Dispatcher::class);
+        $package_service_provider = $this->app->get('package_loader.package_service_provider');
+
+        return new MigrateCommand($migrator,$dispatcher,$package_service_provider );
+    }
+
+    public function getRollbackCommand(): BaseRollbackCommand|null
+    {
+        $migrator = $this->app->get('package_loader.migrator');
+        $package_service_provider = $this->app->get('package_loader.package_service_provider');
+
+        return new RollbackCommand($migrator,$package_service_provider );
     }
 }
