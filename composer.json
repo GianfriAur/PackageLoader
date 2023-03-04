@@ -25,5 +25,12 @@
         "post-autoload-dump": [
             "@php vendor/bin/testbench package:discover --ansi"
         ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Gianfriaur\\PackageLoader\\ServiceProvider\\PackageLoaderServiceProvider"
+            ]
+        }
     }
 }

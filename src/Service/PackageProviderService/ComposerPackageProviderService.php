@@ -18,6 +18,7 @@ use Illuminate\Foundation\Application;
  * This PackageProvider Service provides the following single package configuration:
  * {
  *      "Name": {
+ *          "enabled": bool,
  *          "env":"string",
  *          "only_debug": bool,
  *          "debug": bool,
@@ -31,6 +32,7 @@ class ComposerPackageProviderService implements PackageProviderServiceInterface
     /**
      * @param Application $app
      * @param array<string,array{
+     *     enabled:bool,
      *     env:string,
      *     only_debug:bool,
      *     debug:bool,
@@ -66,7 +68,7 @@ class ComposerPackageProviderService implements PackageProviderServiceInterface
 
             if ($package_name !== $valid_name) return "Package name $package_name mismatch with role [^A-Za-z0-9] expected: $valid_name ";                 // assert package_name have only A-Za-z0-9
             if (!array_key_exists('env', $package_name_config)) return "Missing 'env' parameter on $package_name configuration";                           // assert env exist
-            if (!array_key_exists('load', $package_name_config)) return "Missing 'load' parameter on $package_name configuration";                         // assert load exist
+            if (!array_key_exists('enabled', $package_name_config)) return "Missing 'enabled' parameter on $package_name configuration";                         // assert load exist
             if (!array_key_exists('only_debug', $package_name_config)) return "Missing 'only_debug' parameter on $package_name configuration";             // assert only_debug exist
             if (!array_key_exists('debug', $package_name_config)) return "Missing 'debug' parameter on $package_name configuration";                       // assert debug exist
             if (!array_key_exists('vendor', $package_name_config)) return "Missing 'vendor' parameter on $package_name configuration";                     // assert vendor exist
@@ -85,7 +87,7 @@ class ComposerPackageProviderService implements PackageProviderServiceInterface
         $debug = config('app.debug');
 
         foreach ($this->packages_list as $package_name => $package_name_config) {
-            if (($package_name_config['env'] === 'ALL' || $env === $package_name_config['env']) && $package_name_config['load']) {
+            if (($package_name_config['env'] === 'ALL' || $env === $package_name_config['env']) && $package_name_config['enabled']) {
                 if ($package_name_config['only_debug'] === false || ($package_name_config['only_debug'] === $debug && $debug === true)) {
                     $composer_file = base_path('vendor/' . $package_name_config['vendor'] . '/composer.json');
 
@@ -136,9 +138,9 @@ class ComposerPackageProviderService implements PackageProviderServiceInterface
 
     function getPackageProvider(string $name): AbstractPackageProvider
     {
-        if (!$package = $this->packages_cache_list[$name]) {
+        if (!array_key_exists($name,$this->packages_cache_list)){
             throw new PackageProviderNotFoundException($name, array_keys($this->packages_cache_list));
         }
-        return $package;
+        return $this->packages_cache_list[$name];
     }
 }
