@@ -2,6 +2,8 @@
 
 namespace Gianfriaur\PackageLoader\Service\MigrationStrategyService;
 
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseFreshCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRefreshCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseResetCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRollbackCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\ResetCommand;
@@ -115,4 +117,15 @@ readonly class VaultMigrationStrategyServiceService implements MigrationStrategy
 
         return new ResetCommand($migrator,$package_service_provider );
     }
+
+    public function getFreshCommand(): BaseFreshCommand|null
+    {
+        return null;
+    }
+
+    public function getRefreshCommand(): BaseRefreshCommand|null
+    {
+        return null;
+    }
+
 }

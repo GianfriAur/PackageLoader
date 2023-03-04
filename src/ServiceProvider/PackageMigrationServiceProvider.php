@@ -68,9 +68,9 @@ class PackageMigrationServiceProvider extends ServiceProvider implements Deferra
     protected function loadCommands(): Collection{
         return (new Collection([
             $this->migrationStrategyService->getMigrateCommand(),
-            //TODO: $this->migrationStrategyService->getFreshCommand(),
+            $this->migrationStrategyService->getFreshCommand(),
             $this->migrationStrategyService->getInstallCommand(),
-            //TODO: $this->migrationStrategyService->getRefreshCommand(),
+            $this->migrationStrategyService->getRefreshCommand(),
             $this->migrationStrategyService->getResetCommand(),
             $this->migrationStrategyService->getRollbackCommand(),
             $this->migrationStrategyService->getStatusCommand(),

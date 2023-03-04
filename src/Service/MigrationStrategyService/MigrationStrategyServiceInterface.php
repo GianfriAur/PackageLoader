@@ -2,9 +2,11 @@
 
 namespace Gianfriaur\PackageLoader\Service\MigrationStrategyService;
 
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseFreshCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseInstallCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateMakeCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRefreshCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseResetCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRollbackCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseStatusCommand;
@@ -45,7 +47,11 @@ interface MigrationStrategyServiceInterface
      */
     public function getMigrateCommand(): BaseMigrateCommand|null;
 
-    //TODO: public function getFreshCommand():null;
+    /**
+     * return new BaseInstallCommand if your strategy has a custom migration migrate command
+     * return null if your strategy hasn't any migration migrate command
+     */
+    public function getFreshCommand():BaseFreshCommand|null;
 
     /**
      * return new BaseInstallCommand if your strategy has a custom migration install command
@@ -53,7 +59,11 @@ interface MigrationStrategyServiceInterface
      */
     public function getInstallCommand(): BaseInstallCommand|null;
 
-    //TODO: public function getRefreshCommand():null;
+    /**
+     * return new BaseRefreshCommand if your strategy has a custom migration fresh command
+     * return null if your strategy hasn't any migration fresh command
+     */
+    public function getRefreshCommand(): BaseRefreshCommand | null;
 
     /**
      * return new BaseResetCommand if your strategy has a custom migration reset command
