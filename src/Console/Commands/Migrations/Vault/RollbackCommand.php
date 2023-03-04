@@ -16,12 +16,12 @@ class RollbackCommand extends BaseRollbackCommand
     protected array $packages = [];
 
     public function __construct(
-        PackageMigrator $migrator,
+        PackageMigrator                 $migrator,
         PackageProviderServiceInterface $packageProviderService)
     {
         parent::__construct();
         $this->migrator = $migrator;
-        $this->packageProviderService= $packageProviderService;
+        $this->packageProviderService = $packageProviderService;
     }
 
     /**
@@ -34,23 +34,23 @@ class RollbackCommand extends BaseRollbackCommand
 
         $packages = $this->option('package');
 
-        if (count($packages)===0) {
+        if (count($packages) === 0) {
             $packages = array_keys($this->packageProviderService->getPackageProviders());
         }
 
         $this->packages = $packages;
 
 
-        if (! $this->confirmToProceed()) {
+        if (!$this->confirmToProceed()) {
             return 1;
         }
-        foreach ( $this->packages as $package) {
+        foreach ($this->packages as $package) {
 
-            $this->migrator->usingConnection($this->option('database'), function () use($package){
+            $this->migrator->usingConnection($this->option('database'), function () use ($package) {
                 $this->migrator->setOutput($this->output)->rollback(
                     $this->getMigrationPaths($package), [
                         'pretend' => $this->option('pretend'),
-                        'step' => (int) $this->option('step'),
+                        'step' => (int)$this->option('step'),
                         'package' => $package,
                     ]
                 );

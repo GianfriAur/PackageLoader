@@ -2,10 +2,8 @@
 
 namespace Gianfriaur\PackageLoader\Service\PackagesListLoaderService;
 
-
 use Gianfriaur\PackageLoader\Exception\BadPackageListException;
 use Gianfriaur\PackageLoader\Exception\MissingPackagesListLoaderServiceOptionException;
-use Gianfriaur\PackageLoader\ServiceProvider\PackageLoaderServiceProvider;
 use Illuminate\Foundation\Application;
 
 class JsonFilePackagesListLoaderService implements PackagesListLoaderServiceInterface

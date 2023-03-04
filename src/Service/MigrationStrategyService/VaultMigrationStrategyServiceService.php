@@ -46,7 +46,7 @@ readonly class VaultMigrationStrategyServiceService implements MigrationStrategy
         $db = $this->app->get('db');
         $table = $this->getOption('table');
 
-        return new VaultPackageMigrationRepository($db,$table );
+        return new VaultPackageMigrationRepository($db, $table);
     }
 
     public function getMigrator(): Migrator|null
@@ -79,27 +79,27 @@ readonly class VaultMigrationStrategyServiceService implements MigrationStrategy
         $migrator = $this->app->get('package_loader.migrator');
         $package_service_provider = $this->app->get('package_loader.package_service_provider');
 
-        return new StatusCommand($migrator,$package_service_provider);
+        return new StatusCommand($migrator, $package_service_provider);
     }
 
     public function getMigrateMakeCommand(): BaseMigrateMakeCommand|null
     {
-        $creator =$this->app->get('package_loader.migration.creator');
+        $creator = $this->app->get('package_loader.migration.creator');
         // TODEFINE: ??? $this->app->get('composer') ??? not work
-       // $composer = $this->app->get(\Illuminate\Support\Composer::class);
+        // $composer = $this->app->get(\Illuminate\Support\Composer::class);
         $package_service_provider = $this->app->get('package_loader.package_service_provider');
 
-       return new MigrateMakeCommand($creator,null,$package_service_provider);
+        return new MigrateMakeCommand($creator, null, $package_service_provider);
     }
 
     public function getMigrateCommand(): BaseMigrateCommand|null
     {
 
         $migrator = $this->app->get('package_loader.migrator');
-        $dispatcher  =$this->app->get(Dispatcher::class);
+        $dispatcher = $this->app->get(Dispatcher::class);
         $package_service_provider = $this->app->get('package_loader.package_service_provider');
 
-        return new MigrateCommand($migrator,$dispatcher,$package_service_provider );
+        return new MigrateCommand($migrator, $dispatcher, $package_service_provider);
     }
 
     public function getRollbackCommand(): BaseRollbackCommand|null
@@ -107,7 +107,7 @@ readonly class VaultMigrationStrategyServiceService implements MigrationStrategy
         $migrator = $this->app->get('package_loader.migrator');
         $package_service_provider = $this->app->get('package_loader.package_service_provider');
 
-        return new RollbackCommand($migrator,$package_service_provider );
+        return new RollbackCommand($migrator, $package_service_provider);
     }
 
     public function getResetCommand(): BaseResetCommand|null
@@ -115,7 +115,7 @@ readonly class VaultMigrationStrategyServiceService implements MigrationStrategy
         $migrator = $this->app->get('package_loader.migrator');
         $package_service_provider = $this->app->get('package_loader.package_service_provider');
 
-        return new ResetCommand($migrator,$package_service_provider );
+        return new ResetCommand($migrator, $package_service_provider);
     }
 
     public function getFreshCommand(): BaseFreshCommand|null

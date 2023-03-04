@@ -2,7 +2,6 @@
 
 namespace Gianfriaur\PackageLoader\Console\Commands\Migrations;
 
-use Gianfriaur\PackageLoader\Migration\PackageMigrator;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
@@ -29,7 +28,7 @@ class MigrationPublisherCommand extends Command
     public function handle()
     {
 
-        $app_migration_path  = base_path('database/migrations/');
+        $app_migration_path = base_path('database/migrations/');
 
         $override = $this->option('override');
 
@@ -54,7 +53,7 @@ class MigrationPublisherCommand extends Command
             $packageProvider = $this->packageProviderService->getPackageProvider($package);
             foreach ($packageProvider->getMigrationPaths() as $path) {
                 $filesInFolder = File::allFiles($path);
-                foreach($filesInFolder as $key => $p){
+                foreach ($filesInFolder as $key => $p) {
 
                     $files = pathinfo($p);
 
@@ -65,19 +64,19 @@ class MigrationPublisherCommand extends Command
         $this->components->twoColumnDetail('<fg=gray>Package - Migration name</>', '<fg=gray>Output directory - </><fg=gray> </><fg=gray> </><fg=gray>Action</>');
         foreach ($allMigrations as $package => $migrations) {
             foreach ($migrations as $basename => $dirname) {
-                $exists = file_exists($app_migration_path.$basename);
-                if (!$exists || $override){
-                    File::copy($dirname.'/'.$basename,$app_migration_path.$basename);
+                $exists = file_exists($app_migration_path . $basename);
+                if (!$exists || $override) {
+                    File::copy($dirname . '/' . $basename, $app_migration_path . $basename);
 
                     $this->components->twoColumnDetail(
                         '<fg=green>' . $package . '</> - ' . $basename,
-                        $app_migration_path.$basename. ' - ' .
-                        ($exists ? '<fg=yellow>OVERRIDE</>' : '<fg=gray> </><fg=gray> </><fg=green> WRITE</>' )
+                        $app_migration_path . $basename . ' - ' .
+                        ($exists ? '<fg=yellow>OVERRIDE</>' : '<fg=gray> </><fg=gray> </><fg=green> WRITE</>')
                     );
-                }else{
+                } else {
                     $this->components->twoColumnDetail(
                         '<fg=green>' . $package . '</> - ' . $basename,
-                        $app_migration_path.$basename. ' - <fg=gray> SKIPPED</>'
+                        $app_migration_path . $basename . ' - <fg=gray> SKIPPED</>'
                     );
                 }
             }

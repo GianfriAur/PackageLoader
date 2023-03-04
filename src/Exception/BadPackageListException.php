@@ -3,7 +3,6 @@
 namespace Gianfriaur\PackageLoader\Exception;
 
 use Gianfriaur\PackageLoader\Service\PackagesListLoaderService\PackagesListLoaderServiceInterface;
-use Gianfriaur\PackageLoader\ServiceProvider\PackageLoaderServiceProvider;
 use Throwable;
 
 class BadPackageListException extends PackageLoaderException
@@ -13,7 +12,7 @@ class BadPackageListException extends PackageLoaderException
         $message = app()->get(PackagesListLoaderServiceInterface::class)->exceptionBaseMessage();
 
         parent::__construct(
-            $message.$error,
+            $message . $error,
             $code,
             $previous
         );

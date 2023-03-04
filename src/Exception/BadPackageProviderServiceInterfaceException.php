@@ -7,9 +7,10 @@ use Throwable;
 
 class BadPackageProviderServiceInterfaceException extends PackageLoaderException
 {
-    public function __construct(string $providedPackageLoaderService = "", int $code = 0, ?Throwable $previous = null) {
+    public function __construct(string $providedPackageLoaderService = "", int $code = 0, ?Throwable $previous = null)
+    {
         parent::__construct(
-            "The supplied PackageProviderService ($providedPackageLoaderService) does not implement ".PackageProviderServiceInterface::class,
+            "The supplied PackageProviderService ($providedPackageLoaderService) does not implement " . PackageProviderServiceInterface::class,
             $code,
             $previous
         );

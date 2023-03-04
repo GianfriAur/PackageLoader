@@ -52,12 +52,12 @@ class DefaultPackageProviderService implements PackageProviderServiceInterface
         foreach ($this->packages_list as $package_name => $package_name_config) {
             $valid_name = preg_replace('/[^A-Za-z0-9]/', '', str_replace(' ', '', $package_name));
 
-            if ( $package_name !== $valid_name ) return "Package name $package_name mismatch with role [^A-Za-z0-9] expected: $valid_name ";                             // assert package_name have only A-Za-z0-9
-            if ( !array_key_exists('env', $package_name_config) ) return "Missing 'env' parameter on $package_name configuration";                                       // assert env exist
-            if ( !array_key_exists('enabled', $package_name_config) ) return "Missing 'enabled' parameter on $package_name configuration";                                     // assert load exist
-            if ( !array_key_exists('only_debug', $package_name_config) ) return "Missing 'only_debug' parameter on $package_name configuration";                         // assert only_debug exist
-            if ( !array_key_exists('debug', $package_name_config) ) return "Missing 'debug' parameter on $package_name configuration";                                   // assert debug exist
-            if ( !array_key_exists('package_provider', $package_name_config) ) return "Missing 'package_provider' parameter on $package_name configuration";             // assert package_provider exist
+            if ($package_name !== $valid_name) return "Package name $package_name mismatch with role [^A-Za-z0-9] expected: $valid_name ";                                   // assert package_name have only A-Za-z0-9
+            if (!array_key_exists('env', $package_name_config)) return "Missing 'env' parameter on $package_name configuration";                                             // assert env exist
+            if (!array_key_exists('enabled', $package_name_config)) return "Missing 'enabled' parameter on $package_name configuration";                                     // assert load exist
+            if (!array_key_exists('only_debug', $package_name_config)) return "Missing 'only_debug' parameter on $package_name configuration";                               // assert only_debug exist
+            if (!array_key_exists('debug', $package_name_config)) return "Missing 'debug' parameter on $package_name configuration";                                         // assert debug exist
+            if (!array_key_exists('package_provider', $package_name_config)) return "Missing 'package_provider' parameter on $package_name configuration";                   // assert package_provider exist
 
         }
         return true;
@@ -65,23 +65,23 @@ class DefaultPackageProviderService implements PackageProviderServiceInterface
 
     public function load(): void
     {
-        $env   = config('app.env');
+        $env = config('app.env');
         $debug = config('app.debug');
 
         foreach ($this->packages_list as $package_name => $package_name_config) {
-            if ( ($package_name_config[ 'env' ] === 'ALL' || $env === $package_name_config[ 'env' ]) && $package_name_config[ 'enabled' ] ) {
-                if ( $package_name_config[ 'only_debug' ] === false || ($package_name_config[ 'only_debug' ] === $debug && $debug === true) ) {
-                    $package_provider_class = $package_name_config[ 'package_provider' ];
-                    if ( !class_exists($package_provider_class) ) {
+            if (($package_name_config['env'] === 'ALL' || $env === $package_name_config['env']) && $package_name_config['enabled']) {
+                if ($package_name_config['only_debug'] === false || ($package_name_config['only_debug'] === $debug && $debug === true)) {
+                    $package_provider_class = $package_name_config['package_provider'];
+                    if (!class_exists($package_provider_class)) {
                         throw new MissingPackageProviderException($package_provider_class);
                     }
 
-                    if ( !is_subclass_of($package_provider_class, AbstractPackageProvider::class) ) {
+                    if (!is_subclass_of($package_provider_class, AbstractPackageProvider::class)) {
                         throw new BadPackageProviderException($package_provider_class);
                     }
 
                     /** @var AbstractPackageProvider $package_provider */
-                    $package_provider = new $package_provider_class($this->app, $this, $package_name_config[ 'debug' ]);
+                    $package_provider = new $package_provider_class($this->app, $this, $package_name_config['debug']);
 
                     $this->packages_cache_list[$package_name] = $package_provider;
 
@@ -99,7 +99,7 @@ class DefaultPackageProviderService implements PackageProviderServiceInterface
 
     function getPackageProvider(string $name): AbstractPackageProvider
     {
-        if (!array_key_exists($name,$this->packages_cache_list)){
+        if (!array_key_exists($name, $this->packages_cache_list)) {
             throw new PackageProviderNotFoundException($name, array_keys($this->packages_cache_list));
         }
         return $this->packages_cache_list[$name];

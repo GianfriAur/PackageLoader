@@ -24,12 +24,12 @@ interface PackageProviderServiceInterface
      * This method is used to validate the content of the file configured with resource_file, it must return ture or the error description
      * @return bool|string
      */
-    function validatePackageList():bool|string;
+    function validatePackageList(): bool|string;
 
     /**
      * @return array<string, AbstractPackageProvider>
      */
-    function getPackageProviders():array;
+    function getPackageProviders(): array;
 
-    function getPackageProvider(string $name):AbstractPackageProvider;
+    function getPackageProvider(string $name): AbstractPackageProvider;
 }

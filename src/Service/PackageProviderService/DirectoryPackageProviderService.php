@@ -64,18 +64,18 @@ class DirectoryPackageProviderService implements PackageProviderServiceInterface
         foreach ($this->packages_list as $package_name => $package_name_config) {
             $valid_name = preg_replace('/[^A-Za-z0-9]/', '', str_replace(' ', '', $package_name));
 
-            if ($package_name !== $valid_name) return "Package name $package_name mismatch with role [^A-Za-z0-9] expected: $valid_name ";                 // assert package_name have only A-Za-z0-9
-            if (!array_key_exists('env', $package_name_config)) return "Missing 'env' parameter on $package_name configuration";                           // assert env exist
+            if ($package_name !== $valid_name) return "Package name $package_name mismatch with role [^A-Za-z0-9] expected: $valid_name ";                       // assert package_name have only A-Za-z0-9
+            if (!array_key_exists('env', $package_name_config)) return "Missing 'env' parameter on $package_name configuration";                                 // assert env exist
             if (!array_key_exists('enabled', $package_name_config)) return "Missing 'enabled' parameter on $package_name configuration";                         // assert load exist
-            if (!array_key_exists('only_debug', $package_name_config)) return "Missing 'only_debug' parameter on $package_name configuration";             // assert only_debug exist
-            if (!array_key_exists('debug', $package_name_config)) return "Missing 'debug' parameter on $package_name configuration";                       // assert debug exist
+            if (!array_key_exists('only_debug', $package_name_config)) return "Missing 'only_debug' parameter on $package_name configuration";                   // assert only_debug exist
+            if (!array_key_exists('debug', $package_name_config)) return "Missing 'debug' parameter on $package_name configuration";                             // assert debug exist
         }
         return true;
     }
 
     private function generateClassName(string $package_name): string
     {
-        return str_replace('\\\\', '\\',  $this->getOption('namespace_prefix') . '\\' .$package_name . '\\' .$this->getOption('namespace')  .'\\' . $package_name . $this->getOption('suffix'));
+        return str_replace('\\\\', '\\', $this->getOption('namespace_prefix') . '\\' . $package_name . '\\' . $this->getOption('namespace') . '\\' . $package_name . $this->getOption('suffix'));
     }
 
     public function load(): void
@@ -88,7 +88,7 @@ class DirectoryPackageProviderService implements PackageProviderServiceInterface
                 if ($package_name_config['only_debug'] === false || ($package_name_config['only_debug'] === $debug && $debug === true)) {
 
                     $candidates = [];
-                    $package_provider_class = $this->generateClassName( $package_name);
+                    $package_provider_class = $this->generateClassName($package_name);
                     if (class_exists($package_provider_class)) {
                         $candidates[] = $package_provider_class;
                     }
@@ -120,7 +120,7 @@ class DirectoryPackageProviderService implements PackageProviderServiceInterface
 
     function getPackageProvider(string $name): AbstractPackageProvider
     {
-        if (!array_key_exists($name,$this->packages_cache_list)){
+        if (!array_key_exists($name, $this->packages_cache_list)) {
             throw new PackageProviderNotFoundException($name, array_keys($this->packages_cache_list));
         }
         return $this->packages_cache_list[$name];

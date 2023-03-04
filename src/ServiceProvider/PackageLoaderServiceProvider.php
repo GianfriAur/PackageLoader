@@ -40,7 +40,7 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
      */
     public function register(): void
     {
-      //  $start = hrtime(true);
+        //  $start = hrtime(true);
 
 
         $this->registerConfig();
@@ -56,17 +56,17 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         if ($this->app->runningInConsole()) {
             $this->registerCommands();
 
-            if ($has_migration_strategy){
+            if ($has_migration_strategy) {
                 $this->registerPackageMigrationServiceProvider();
-            }else{
-                 $this->registerMigrationPublishCommand();
+            } else {
+                $this->registerMigrationPublishCommand();
             }
         }
-      //  $end = hrtime(true);
-     //   $eta = $end - $start;
+        //  $end = hrtime(true);
+        //   $eta = $end - $start;
 // convert nanoseconds to milliseconds
-     //   $eta /= 1e+6;
-     //   dd("Code block was running for $eta milliseconds");
+        //   $eta /= 1e+6;
+        //   dd("Code block was running for $eta milliseconds");
 
     }
 
@@ -84,7 +84,8 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         );
     }
 
-    private function registerMigrationPublishCommand(){
+    private function registerMigrationPublishCommand()
+    {
         $this->commands([MigrationPublisherCommand::class]);
     }
 
@@ -175,9 +176,9 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         return false;
     }
 
-    private function registerPackageMigrationServiceProvider():void
+    private function registerPackageMigrationServiceProvider(): void
     {
-        $this->app->register( PackageMigrationServiceProvider::class);
+        $this->app->register(PackageMigrationServiceProvider::class);
     }
 
     private function loadPackageServiceProvider(): void

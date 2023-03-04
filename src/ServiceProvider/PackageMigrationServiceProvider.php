@@ -2,11 +2,8 @@
 
 namespace Gianfriaur\PackageLoader\ServiceProvider;
 
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\InstallCommand;
-use Gianfriaur\PackageLoader\Migration\PackageMigrator;
 use Gianfriaur\PackageLoader\Service\MigrationStrategyService\MigrationStrategyServiceInterface;
 use Illuminate\Contracts\Support\DeferrableProvider;
-use Illuminate\Database\Migrations\MigrationCreator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
@@ -65,7 +62,8 @@ class PackageMigrationServiceProvider extends ServiceProvider implements Deferra
         }
     }
 
-    protected function loadCommands(): Collection{
+    protected function loadCommands(): Collection
+    {
         return (new Collection([
             $this->migrationStrategyService->getMigrateCommand(),
             $this->migrationStrategyService->getFreshCommand(),
@@ -76,26 +74,26 @@ class PackageMigrationServiceProvider extends ServiceProvider implements Deferra
             $this->migrationStrategyService->getStatusCommand(),
             $this->migrationStrategyService->getMigrateMakeCommand()
         ]))
-            ->filter(fn($e)=> $e!== null)
-            ->map(fn($e)=>[get_class($e),$e]);
+            ->filter(fn($e) => $e !== null)
+            ->map(fn($e) => [get_class($e), $e]);
     }
 
     protected function registerCommands(): void
     {
-        foreach ($this->commands as [$command_class, $command_instance]){
-            $this->app->singleton($command_class, function ($app) use($command_instance) {
+        foreach ($this->commands as [$command_class, $command_instance]) {
+            $this->app->singleton($command_class, function ($app) use ($command_instance) {
                 return $command_instance;
             });
         }
 
-        $this->commands($this->commands->map(fn($e)=>$e[0])->toArray());
+        $this->commands($this->commands->map(fn($e) => $e[0])->toArray());
     }
 
     public function provides(): array
     {
         return array_merge([
             'package_loader.migrator', 'package_loader.migration.repository', 'package_loader.migration.creator',
-        ], $this->commands->map(fn($e)=>$e[0])->toArray());
+        ], $this->commands->map(fn($e) => $e[0])->toArray());
     }
 
 

@@ -17,12 +17,12 @@ class ResetCommand extends BaseResetCommand
     protected array $packages = [];
 
     public function __construct(
-        PackageMigrator $migrator,
+        PackageMigrator                 $migrator,
         PackageProviderServiceInterface $packageProviderService)
     {
         parent::__construct();
         $this->migrator = $migrator;
-        $this->packageProviderService= $packageProviderService;
+        $this->packageProviderService = $packageProviderService;
     }
 
     public function handle()
@@ -30,29 +30,29 @@ class ResetCommand extends BaseResetCommand
 
         $packages = $this->option('package');
 
-        if (count($packages)===0) {
+        if (count($packages) === 0) {
             $packages = array_keys($this->packageProviderService->getPackageProviders());
         }
 
         $this->packages = $packages;
 
-        if (! $this->confirmToProceed()) {
+        if (!$this->confirmToProceed()) {
             return 1;
         }
 
         return $this->migrator->usingConnection($this->option('database'), function () {
             // First, we'll make sure that the migration table actually exists before we
-            // start trying to rollback and re-run all of the migrations. If it's not
+            // start trying to rollback and re-run all the migrations. If it's not
             // present we'll just bail out with an info message for the developers.
-            if (! $this->migrator->repositoryExists()) {
-                 $this->components->warn('Migration table not found.');
+            if (!$this->migrator->repositoryExists()) {
+                $this->components->warn('Migration table not found.');
                 return;
             }
 
-            foreach ( $this->packages as $package) {
+            foreach ($this->packages as $package) {
 
                 $this->migrator->setOutput($this->output)->resetPackage(
-                    $package,  $this->getMigrationPaths($package), $this->option('pretend')
+                    $package, $this->getMigrationPaths($package), $this->option('pretend')
                 );
             }
 

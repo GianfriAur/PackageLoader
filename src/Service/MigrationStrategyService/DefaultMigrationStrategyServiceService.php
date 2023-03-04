@@ -28,8 +28,8 @@ readonly class DefaultMigrationStrategyServiceService implements MigrationStrate
             $package_service_provider = $this->app->get('package_loader.package_service_provider');
 
             // register to default migrator the package_service_provider database paths
-            foreach ($package_service_provider->getPackageProviders() as $package_service_provider){
-                foreach (  $package_service_provider->getMigrationPaths() as $path){
+            foreach ($package_service_provider->getPackageProviders() as $package_service_provider) {
+                foreach ($package_service_provider->getMigrationPaths() as $path) {
                     $migrator->path($path);
                 }
             }
@@ -61,7 +61,7 @@ readonly class DefaultMigrationStrategyServiceService implements MigrationStrate
         return null;
     }
 
-    public function getMigrateMakeCommand():BaseMigrateMakeCommand|null
+    public function getMigrateMakeCommand(): BaseMigrateMakeCommand|null
     {
         return null;
     }
@@ -73,7 +73,7 @@ readonly class DefaultMigrationStrategyServiceService implements MigrationStrate
 
     public function getRollbackCommand(): BaseRollbackCommand|null
     {
-       return null;
+        return null;
     }
 
     public function getResetCommand(): BaseResetCommand|null

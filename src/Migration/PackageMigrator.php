@@ -10,7 +10,6 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
 use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Database\Events\MigrationsStarted;
-use Illuminate\Database\Events\NoPendingMigrations;
 use Illuminate\Database\Migrations\Migrator as BaseMigrator;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
@@ -27,9 +26,9 @@ class PackageMigrator extends BaseMigrator
     /** @noinspection PhpMissingParentConstructorInspection */
     public function __construct(
         PackageMigrationRepositoryInterface $repository,
-        Resolver $resolver,
-        Filesystem $files,
-        Dispatcher $dispatcher = null)
+        Resolver                            $resolver,
+        Filesystem                          $files,
+        Dispatcher                          $dispatcher = null)
     {
         $this->files = $files;
         $this->events = $dispatcher;
@@ -42,12 +41,12 @@ class PackageMigrator extends BaseMigrator
         return $this->repository;
     }
 
-    public function hasRunAnyMigrations($package=null): bool
+    public function hasRunAnyMigrations($package = null): bool
     {
         return $this->repositoryExists() && count($this->repository->getRan($package)) > 0;
     }
 
-    public function run($paths = [], array $options = [],$package=null)
+    public function run($paths = [], array $options = [], $package = null)
     {
         $files = $this->getMigrationFiles($paths);
 
@@ -55,13 +54,13 @@ class PackageMigrator extends BaseMigrator
             $files, $this->repository->getRan($package)
         ));
 
-        $this->runPending($migrations, $options,$package);
+        $this->runPending($migrations, $options, $package);
 
         return $migrations;
     }
 
 
-    public function runPending(array $migrations, array $options = [],$package=null)
+    public function runPending(array $migrations, array $options = [], $package = null)
     {
 
         $batch = $this->repository->getNextBatchNumber($package);
@@ -72,7 +71,7 @@ class PackageMigrator extends BaseMigrator
 
 
         foreach ($migrations as $file) {
-            $this->runUp($file, $batch, $pretend,$package);
+            $this->runUp($file, $batch, $pretend, $package);
 
             if ($step) {
                 $batch++;
@@ -80,8 +79,9 @@ class PackageMigrator extends BaseMigrator
         }
 
     }
+
     /** @noinspection PhpParamsInspection */
-    protected function runUp($file, $batch, $pretend,$package=null)
+    protected function runUp($file, $batch, $pretend, $package = null)
     {
 
         $migration = $this->resolvePath($file);
@@ -93,7 +93,7 @@ class PackageMigrator extends BaseMigrator
             return;
         }
 
-        $this->write(Task::class, '<fg=green>'.$package.'</> - '.$name, fn () => $this->runMigration($migration, 'up'));
+        $this->write(Task::class, '<fg=green>' . $package . '</> - ' . $name, fn() => $this->runMigration($migration, 'up'));
 
         $this->repository->log($package, $name, $batch);
     }
@@ -101,7 +101,7 @@ class PackageMigrator extends BaseMigrator
     protected function getMigrationsForRollback(array $options): array
     {
         if (($steps = $options['step'] ?? 0) > 0) {
-            return $this->repository->getMigrations($options['package'],$steps);
+            return $this->repository->getMigrations($options['package'], $steps);
         }
 
         return $this->repository->getLast($options['package']);
@@ -118,9 +118,9 @@ class PackageMigrator extends BaseMigrator
         $this->write(Info::class, 'Rolling back migrations.');
 
         foreach ($migrations as $migration) {
-            $migration = (object) $migration;
+            $migration = (object)$migration;
 
-            if (! $file = Arr::get($files, $migration->migration)) {
+            if (!$file = Arr::get($files, $migration->migration)) {
                 $this->write(TwoColumnDetail::class, $migration->migration, '<fg=yellow;options=bold>Migration not found</>');
 
                 continue;
@@ -149,13 +149,13 @@ class PackageMigrator extends BaseMigrator
         $name = $this->getMigrationName($file);
 
         if ($pretend) {
-             $this->pretendToRun($instance, 'down');
+            $this->pretendToRun($instance, 'down');
             return;
         }
 
-        $this->write(Task::class, '<fg=green>'.$package.'</> - '.$name, fn () => $this->runMigration($instance, 'down'));
+        $this->write(Task::class, '<fg=green>' . $package . '</> - ' . $name, fn() => $this->runMigration($instance, 'down'));
 
-        $this->repository->delete($package,$migration);
+        $this->repository->delete($package, $migration);
     }
 
     public function resetPackage(string $package, $paths = [], $pretend = false)
@@ -163,22 +163,22 @@ class PackageMigrator extends BaseMigrator
         $migrations = array_reverse($this->repository->getRan($package));
 
         if (count($migrations) === 0) {
-            $this->write(Info::class, 'Nothing to rollback for <fg=green>'.$package.'</>.');
+            $this->write(Info::class, 'Nothing to rollback for <fg=green>' . $package . '</>.');
 
             return [];
         }
 
-        return tap($this->resetMigrationsPackage($package,$migrations, $paths, $pretend), function () {
+        return tap($this->resetMigrationsPackage($package, $migrations, $paths, $pretend), function () {
             if ($this->output) {
                 $this->output->writeln('');
             }
         });
     }
 
-    protected function resetMigrationsPackage(string $package,array $migrations, array $paths, $pretend = false)
+    protected function resetMigrationsPackage(string $package, array $migrations, array $paths, $pretend = false)
     {
         $migrations = collect($migrations)->map(function ($m) {
-            return (object) ['migration' => $m];
+            return (object)['migration' => $m];
         })->all();
 
         $options = compact('pretend');

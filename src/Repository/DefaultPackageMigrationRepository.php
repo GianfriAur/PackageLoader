@@ -57,7 +57,7 @@ readonly class DefaultPackageMigrationRepository implements PackageMigrationRepo
 
     public function repositoryExists(): bool
     {
-       return $this->migrationRepository->repositoryExists();
+        return $this->migrationRepository->repositoryExists();
     }
 
     public function deleteRepository(): void

@@ -2,7 +2,6 @@
 
 namespace Gianfriaur\PackageLoader\Console\Commands;
 
-use App\Models\User;
 use Gianfriaur\PackageLoader\Service\PackagesListLoaderService\PackagesListLoaderServiceInterface;
 use Illuminate\Console\Command;
 

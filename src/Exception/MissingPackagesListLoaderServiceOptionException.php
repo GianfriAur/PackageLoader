@@ -12,7 +12,7 @@ class MissingPackagesListLoaderServiceOptionException extends PackageLoaderExcep
     {
         $packages_list_loader_service_class = $packagesListLoaderService::class;
         parent::__construct(
-            "For $packages_list_loader_service_class missing $option option in config/".PackageLoaderServiceProvider::CONFIG_FILE_NANE,
+            "For $packages_list_loader_service_class missing $option option in config/" . PackageLoaderServiceProvider::CONFIG_FILE_NANE,
             $code,
             $previous
         );

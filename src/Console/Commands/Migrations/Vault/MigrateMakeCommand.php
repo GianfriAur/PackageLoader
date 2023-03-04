@@ -27,25 +27,26 @@ class MigrateMakeCommand extends BaseMigrateMakeCommand implements PromptsForMis
         $this->packageProviderService = $packageProviderService;
     }
 
-    public function handle():void
+    /** @noinspection SpellCheckingInspection */
+    public function handle(): void
     {
-        $package =trim($this->input->getArgument('package'));
+        $package = trim($this->input->getArgument('package'));
         $name = Str::snake(trim($this->input->getArgument('name')));
         $table = $this->input->getOption('table');
         $create = $this->input->getOption('create') ?: false;
 
-        if (! $table && is_string($create)) {
+        if (!$table && is_string($create)) {
             $table = $create;
 
             $create = true;
         }
-        if (! $table) {
+        if (!$table) {
             [$table, $create] = TableGuesser::guess($name);
         }
 
-        $this->writeMigration($name, $table, $create,$package);
+        $this->writeMigration($name, $table, $create, $package);
 
-      //  $this->composer->dumpAutoloads();
+        //  $this->composer->dumpAutoloads();
     }
 
     protected function writeMigration(string $name, string $table, bool $create, string $package)
@@ -59,7 +60,7 @@ class MigrateMakeCommand extends BaseMigrateMakeCommand implements PromptsForMis
     protected function getMigrationPath($package): string
     {
         $paths = $this->getMigrationPaths($package);
-        return  $this->choice(
+        return $this->choice(
             'With migration path?',
             $paths,
             0,

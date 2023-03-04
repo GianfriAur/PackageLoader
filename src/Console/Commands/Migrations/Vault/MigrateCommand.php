@@ -30,15 +30,15 @@ class MigrateCommand extends BaseMigrateCommand
      * Create a new migration command instance.
      */
     public function __construct(
-        PackageMigrator $migrator,
-        Dispatcher $dispatcher,
+        PackageMigrator                 $migrator,
+        Dispatcher                      $dispatcher,
         PackageProviderServiceInterface $packageProviderService)
     {
         parent::__construct();
 
         $this->migrator = $migrator;
         $this->dispatcher = $dispatcher;
-        $this->packageProviderService= $packageProviderService;
+        $this->packageProviderService = $packageProviderService;
 
     }
 
@@ -52,20 +52,20 @@ class MigrateCommand extends BaseMigrateCommand
 
         $packages = $this->option('package');
 
-        if (count($packages)===0) {
+        if (count($packages) === 0) {
             $packages = array_keys($this->packageProviderService->getPackageProviders());
         }
 
         $this->packages = $packages;
 
-        if (! $this->confirmToProceed()) {
+        if (!$this->confirmToProceed()) {
             return 1;
         }
 
         $this->migrator->usingConnection($this->option('database'), function () {
             $this->prepareDatabase();
 
-            $migrations= new Collection();
+            $migrations = new Collection();
 
             foreach ($this->packages as $package) {
                 $ran = $this->migrator->getRepository()->getRan($package);
@@ -73,23 +73,23 @@ class MigrateCommand extends BaseMigrateCommand
                 $migrations = $migrations->merge($this->getStatusFor($ran, $batches, $package));
             }
 
-            if (count($migrations)===0){
+            if (count($migrations) === 0) {
                 $this->fireMigrationEvent(new NoPendingMigrations('up'));
 
                 $this->write(Info::class, 'Nothing to migrate');
-            }else{
+            } else {
                 $this->fireMigrationEvent(new MigrationsStarted('up'));
 
                 $this->write(Info::class, 'Running migrations.');
 
-                foreach ( $this->packages as $package) {
+                foreach ($this->packages as $package) {
 
                     $migrations = $this->migrator->setOutput($this->output)
                         ->run($this->getMigrationPaths($package), [
                             'pretend' => $this->option('pretend'),
-                            'step'    => $this->option('step'),
+                            'step' => $this->option('step'),
                             'package' => $package,
-                        ],$package);
+                        ], $package);
 
                 }
 
@@ -110,7 +110,7 @@ class MigrateCommand extends BaseMigrateCommand
      */
     protected function prepareDatabase()
     {
-        if (! $this->repositoryExists()) {
+        if (!$this->repositoryExists()) {
             $this->components->info('Preparing database.');
 
             $this->components->task('Creating package migration table', function () {
@@ -131,10 +131,10 @@ class MigrateCommand extends BaseMigrateCommand
      */
     protected function repositoryExists()
     {
-        return retry(2, fn () => $this->migrator->repositoryExists(), 0, function ($e) {
+        return retry(2, fn() => $this->migrator->repositoryExists(), 0, function ($e) {
             try {
                 if ($e->getPrevious() instanceof SQLiteDatabaseDoesNotExistException) {
-                    return $this->createMissingSqliteDatbase($e->getPrevious()->path);
+                    return $this->createMissingSqliteDatabase($e->getPrevious()->path);
                 }
 
                 $connection = $this->migrator->resolveConnection($this->option('database'));
@@ -156,10 +156,10 @@ class MigrateCommand extends BaseMigrateCommand
     /**
      * Create a missing SQLite database.
      *
-     * @param  string  $path
+     * @param string $path
      * @return bool
      */
-    protected function createMissingSqliteDatbase($path)
+    protected function createMissingSqliteDatabase(string $path): bool
     {
         if ($this->option('force')) {
             return touch($path);
@@ -169,9 +169,9 @@ class MigrateCommand extends BaseMigrateCommand
             return false;
         }
 
-        $this->components->warn('The SQLite database does not exist: '.$path);
+        $this->components->warn('The SQLite database does not exist: ' . $path);
 
-        if (! $this->components->confirm('Would you like to create it?')) {
+        if (!$this->components->confirm('Would you like to create it?')) {
             return false;
         }
 
@@ -189,14 +189,14 @@ class MigrateCommand extends BaseMigrateCommand
             return false;
         }
 
-        if (! $this->option('force') && $this->option('no-interaction')) {
+        if (!$this->option('force') && $this->option('no-interaction')) {
             return false;
         }
 
-        if (! $this->option('force') && ! $this->option('no-interaction')) {
+        if (!$this->option('force') && !$this->option('no-interaction')) {
             $this->components->warn("The database '{$connection->getDatabaseName()}' does not exist on the '{$connection->getName()}' connection.");
 
-            if (! $this->components->confirm('Would you like to create it?')) {
+            if (!$this->components->confirm('Would you like to create it?')) {
                 return false;
             }
         }
@@ -219,7 +219,7 @@ class MigrateCommand extends BaseMigrateCommand
     /**
      * Fire the given event for the migration.
      */
-    public function fireMigrationEvent($event) : void
+    public function fireMigrationEvent($event): void
     {
         // if ($this->events) {
         //     $this->events->dispatch($event);
@@ -235,13 +235,15 @@ class MigrateCommand extends BaseMigrateCommand
      * @return Collection
      * @noinspection DuplicatedCode
      */
-    protected function getStatusFor(array $ran, array $batches, string $package)
+    protected function getStatusFor(array $ran, array $batches, string $package):Collection
     {
         return Collection::make($this->getAllMigrationFiles($package))
-            ->map(function ($migration) use ($ran, $batches,$package) {
+            ->map(function ($migration) use ($ran, $batches, $package) {
                 $migrationName = $this->migrator->getMigrationName($migration);
                 return [$migrationName, !in_array($migrationName, $ran), $package];
-            })->filter(function ($migration){return $migration[1];});
+            })->filter(function ($migration) {
+                return $migration[1];
+            });
     }
 
     protected function getAllMigrationFiles(string $package): array
@@ -252,8 +254,8 @@ class MigrateCommand extends BaseMigrateCommand
     /**
      * Write to the console's output.
      *
-     * @param  string  $component
-     * @param  array<int, string>|string  ...$arguments
+     * @param string $component
+     * @param array<int, string>|string ...$arguments
      * @return void
      */
     protected function write($component, ...$arguments)
