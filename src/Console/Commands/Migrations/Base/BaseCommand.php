@@ -1,9 +1,9 @@
 <?php
 
-namespace Gianfriaur\PackageLoader\Console\Commands\Migrations;
+namespace Gianfriaur\PackageLoader\Console\Commands\Migrations\Base;
 
-use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
 use Illuminate\Console\Command;
+
 class BaseCommand extends Command
 {
 

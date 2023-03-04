@@ -2,7 +2,7 @@
 
 namespace Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault;
 
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateMakeCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseMigrateMakeCommand;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Database\Console\Migrations\TableGuesser;

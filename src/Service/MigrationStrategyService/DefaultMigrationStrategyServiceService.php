@@ -2,14 +2,14 @@
 
 namespace Gianfriaur\PackageLoader\Service\MigrationStrategyService;
 
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseFreshCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseInstallCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateMakeCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRefreshCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseResetCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRollbackCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseStatusCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseFreshCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseInstallCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseMigrateCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseMigrateMakeCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseRefreshCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseResetCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseRollbackCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseStatusCommand;
 use Gianfriaur\PackageLoader\Repository\PackageMigrationRepositoryInterface;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
 use Illuminate\Database\Migrations\MigrationCreator;

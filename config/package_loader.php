@@ -29,10 +29,13 @@ return[
     |
     | Use 'default' for using a default laravel migration
     | Use 'vault' for managing package parallel migrations
-    | Use null to not load migration management
+    | Use null to not load migration management, in this case will
+    |     be loaded a command named package-loader:migrate:publish
+    |     this command will take care of publishing the migrations
+    |     of all the packages in the main application
     |
     */
-    'migration_strategy' => 'vault',
+    'migration_strategy' => 'default',
 
     /*
     |--------------------------------------------------------------------------

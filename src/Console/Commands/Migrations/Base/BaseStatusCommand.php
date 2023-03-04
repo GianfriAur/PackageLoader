@@ -1,6 +1,6 @@
 <?php
 
-namespace Gianfriaur\PackageLoader\Console\Commands\Migrations;
+namespace Gianfriaur\PackageLoader\Console\Commands\Migrations\Base;
 
 class BaseStatusCommand extends BaseCommand
 {

@@ -2,9 +2,8 @@
 
 namespace Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault;
 
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseInstallCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseInstallCommand;
 use Gianfriaur\PackageLoader\Repository\PackageMigrationRepositoryInterface;
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
 class InstallCommand extends BaseInstallCommand

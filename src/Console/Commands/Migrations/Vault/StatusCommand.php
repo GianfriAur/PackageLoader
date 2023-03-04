@@ -2,7 +2,7 @@
 
 namespace Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault;
 
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseStatusCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseStatusCommand;
 use Gianfriaur\PackageLoader\Migration\PackageMigrator;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
 use Illuminate\Support\Collection;

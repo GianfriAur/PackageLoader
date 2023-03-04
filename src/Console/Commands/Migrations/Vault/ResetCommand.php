@@ -2,10 +2,9 @@
 
 namespace Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault;
 
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseResetCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseResetCommand;
 use Gianfriaur\PackageLoader\Migration\PackageMigrator;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
-use Illuminate\Database\Migrations\Migrator;
 use Symfony\Component\Console\Input\InputOption;
 
 class ResetCommand extends BaseResetCommand
@@ -26,11 +25,6 @@ class ResetCommand extends BaseResetCommand
         $this->packageProviderService= $packageProviderService;
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
 
@@ -66,11 +60,6 @@ class ResetCommand extends BaseResetCommand
         });
     }
 
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
     protected function getOptions()
     {
         return [

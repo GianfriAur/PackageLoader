@@ -2,8 +2,7 @@
 
 namespace Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault;
 
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateCommand;
-
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseMigrateCommand;
 use Gianfriaur\PackageLoader\Migration\PackageMigrator;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
 use Illuminate\Console\View\Components\Info;
@@ -13,8 +12,9 @@ use Illuminate\Database\Events\MigrationsStarted;
 use Illuminate\Database\Events\NoPendingMigrations;
 use Illuminate\Database\SQLiteDatabaseDoesNotExistException;
 use Illuminate\Support\Collection;
-use \PDOException;
+use PDOException;
 use Throwable;
+
 class MigrateCommand extends BaseMigrateCommand
 {
     protected PackageMigrator $migrator;

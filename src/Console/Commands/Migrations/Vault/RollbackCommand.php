@@ -2,10 +2,9 @@
 
 namespace Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault;
 
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRollbackCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseRollbackCommand;
 use Gianfriaur\PackageLoader\Migration\PackageMigrator;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
-use Illuminate\Contracts\Events\Dispatcher;
 use Symfony\Component\Console\Input\InputOption;
 
 class RollbackCommand extends BaseRollbackCommand

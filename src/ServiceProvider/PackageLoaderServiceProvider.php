@@ -4,6 +4,7 @@ namespace Gianfriaur\PackageLoader\ServiceProvider;
 
 use Gianfriaur\PackageLoader\Console\Commands\DisablePackageCommand;
 use Gianfriaur\PackageLoader\Console\Commands\EnablePackageCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\MigrationPublisherCommand;
 use Gianfriaur\PackageLoader\Exception\BadMigrationStrategyServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\BadPackageListException;
 use Gianfriaur\PackageLoader\Exception\BadPackageProviderServiceInterfaceException;
@@ -58,7 +59,7 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
             if ($has_migration_strategy){
                 $this->registerPackageMigrationServiceProvider();
             }else{
-                //TODO: $this->registerMigrationPublishCommand();
+                 $this->registerMigrationPublishCommand();
             }
         }
       //  $end = hrtime(true);
@@ -81,6 +82,10 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         $this->mergeConfigFrom(
             __DIR__ . '/../../config/' . self::CONFIG_FILE_NANE, self::CONFIG_NAMESPACE
         );
+    }
+
+    private function registerMigrationPublishCommand(){
+        $this->commands([MigrationPublisherCommand::class]);
     }
 
     private function registerCommands()

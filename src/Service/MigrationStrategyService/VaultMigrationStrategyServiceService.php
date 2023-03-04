@@ -2,25 +2,25 @@
 
 namespace Gianfriaur\PackageLoader\Service\MigrationStrategyService;
 
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseFreshCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRefreshCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseResetCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseRollbackCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\ResetCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\RollbackCommand;
-use Illuminate\Contracts\Events\Dispatcher;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseInstallCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseMigrateMakeCommand;
-use Gianfriaur\PackageLoader\Console\Commands\Migrations\BaseStatusCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseFreshCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseInstallCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseMigrateCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseMigrateMakeCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseRefreshCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseResetCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseRollbackCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Base\BaseStatusCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\InstallCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\MigrateCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\MigrateMakeCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\ResetCommand;
+use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\RollbackCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\Vault\StatusCommand;
 use Gianfriaur\PackageLoader\Exception\MissingMigrationStrategyServiceOptionException;
 use Gianfriaur\PackageLoader\Migration\PackageMigrator;
 use Gianfriaur\PackageLoader\Repository\PackageMigrationRepositoryInterface;
 use Gianfriaur\PackageLoader\Repository\VaultPackageMigrationRepository;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Migrations\MigrationCreator;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Foundation\Application;
