@@ -75,6 +75,22 @@ return[
                 // ex: in Custom package the provider is under [ composer psr-4 ]/PackageProvider/Custom[ suffix ]
                 'namespace'=>'PackageProvider'
             ]
+        ],
+        'directory'=>[
+            'class'=> \Gianfriaur\PackageLoader\Service\PackageProviderService\DirectoryPackageProviderService::class,
+            'options'=>[
+                // ex: in Custom package the provider is under [ namespace_prefix ]/Custom/[  namespace  ]/Custom[    suffix   ]
+                //                                             [ namespace_prefix ]/Custom/[  namespace  ]/CustomPackageProvider
+                'suffix'=>'PackageProvider',
+                // ex: in Custom package the provider is under [ namespace_prefix ]/Custom/[  namespace  ]/Custom[    suffix   ]
+                //                                                         Packages/Custom/[  namespace  ]/Custom[    suffix   ]
+                'namespace_prefix'=>'Packages',
+                // ex: in Custom package the provider is under [ namespace_prefix ]/Custom/[  namespace  ]/Custom[    suffix   ]
+                //                                             [ namespace_prefix ]/Custom/PackageProvider/Custom[    suffix   ]
+                'namespace'=>'PackageProvider'
+
+                // At the end the class of PackageProvider is  Packages/Custom/PackageProvider/CustomPackageProvider
+            ]
         ]
     ],
 
