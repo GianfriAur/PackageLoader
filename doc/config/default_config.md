@@ -1,3 +1,21 @@
+# Configurazione
+
+configuration file `config/package_loader.php`
+
+## parameters
+
+| Nome                      | Tipo   | Descrizione                                     |
+|---------------------------| ------ |-------------------------------------------------|
+| retrieve_strategy         | string | Define which Retrieve Strategy to use           |
+| provider                  | string | Define which Package Service Provider to use    |
+| migration_strategy        | string | Define which Migration Strategy to us           |
+| retrieve_strategies       | array  | Define all Retrieve Strategy and configs        |
+| package_service_providers | array  | Define all Package Service Provider and configs |
+| migration_strategies      | array  | Define all Migration Strategy  and configs      |
+
+## Complete file
+
+```php
 <?php
 
 return[
@@ -115,3 +133,4 @@ return[
         ],
     ]
 ];
+```

@@ -46,7 +46,7 @@ class StressTest  extends \Orchestra\Testbench\TestCase
                 ]
             ],
         ]);
-        
+
         $start = hrtime(true);
 
         $this->app->register(PackageLoaderServiceProvider::class);

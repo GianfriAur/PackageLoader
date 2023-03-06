@@ -15,6 +15,9 @@ use this loader if:
 * you can write your own parallel migration strategies (although I recommend to use the one that is already built-in)
 * you can write your own package recovery mode
 
+## Documentation
+
+You can find the full documentation at [this location](./doc/README.md)
 
 ## Stress Tests 😍
 
