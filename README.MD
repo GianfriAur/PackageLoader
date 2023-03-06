@@ -16,6 +16,18 @@ use this loader if:
 * you can write your own package recovery mode
 
 
+## Stress Tests 😍
+
+I have tried to reduce loading times to reasonably low times
+
+obtaining good results
+
+* Load 10 packages : ~2 milliseconds
+* Load 100 packages : ~10 milliseconds
+* Load 1000 packages : ~400 milliseconds
+
+you can find the stress test in this test: `tests/Stress/StressTest.php`
+
 ## TODO
 * automatic translation management
 * publish to composer packages

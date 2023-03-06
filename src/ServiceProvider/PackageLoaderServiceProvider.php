@@ -9,7 +9,7 @@ use Gianfriaur\PackageLoader\Console\Commands\Migrations\MigrationPublisherComma
 use Gianfriaur\PackageLoader\Exception\BadMigrationStrategyServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\BadRetrieveStrategyServiceException;
 use Gianfriaur\PackageLoader\Exception\BadPackageProviderServiceInterfaceException;
-use Gianfriaur\PackageLoader\Exception\BadPRetrieveStrategyServiceInterfaceException;
+use Gianfriaur\PackageLoader\Exception\BadRetrieveStrategyServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\PackageLoaderMissingConfigException;
 use Gianfriaur\PackageLoader\Service\MigrationStrategyService\MigrationStrategyServiceInterface;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
@@ -36,15 +36,12 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
 
     /**
      * @throws BadRetrieveStrategyServiceException
-     * @throws BadPRetrieveStrategyServiceInterfaceException
+     * @throws BadRetrieveStrategyServiceInterfaceException
      * @throws BadPackageProviderServiceInterfaceException
      * @throws BadMigrationStrategyServiceInterfaceException
      */
     public function register(): void
     {
-        //  $start = hrtime(true);
-
-
         $this->registerConfig();
 
         $this->registerRetrieveStrategyService();
@@ -64,12 +61,6 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
                 $this->registerMigrationPublishCommand();
             }
         }
-        //  $end = hrtime(true);
-        //   $eta = $end - $start;
-// convert nanoseconds to milliseconds
-        //   $eta /= 1e+6;
-        //   dd("Code block was running for $eta milliseconds");
-
     }
 
     private function bootConfig(): void
@@ -123,7 +114,7 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         [$retrieve_strategy_service_class, $retrieve_strategy_service_options] = $this->getRetrieveStrategyServiceDefinition();
 
         if (!is_subclass_of($retrieve_strategy_service_class, RetrieveStrategyServiceInterface::class)) {
-            throw new BadPRetrieveStrategyServiceInterfaceException($retrieve_strategy_service_class);
+            throw new BadRetrieveStrategyServiceInterfaceException($retrieve_strategy_service_class);
         }
 
         // register singleton of retrieve_strategy_service
