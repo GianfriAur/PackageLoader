@@ -2,7 +2,7 @@
 
 namespace Gianfriaur\PackageLoader\Service\PackageProviderService;
 
-use Gianfriaur\PackageLoader\Exception\BadPackageListException;
+use Gianfriaur\PackageLoader\Exception\BadRetrieveStrategyServiceException;
 use Gianfriaur\PackageLoader\Exception\MissingPackageProviderException;
 use Gianfriaur\PackageLoader\Exception\MissingPackageProviderServiceOptionException;
 use Gianfriaur\PackageLoader\Exception\PackageProviderNotFoundException;
@@ -96,7 +96,7 @@ class DirectoryPackageProviderService implements PackageProviderServiceInterface
                     if (sizeof($candidates) === 0) {
                         throw new MissingPackageProviderException($package_provider_class, $package_name);
                     } elseif (sizeof($candidates) > 1) {
-                        throw new BadPackageListException("$package_name  has too many PackageProvider");
+                        throw new BadRetrieveStrategyServiceException("$package_name  has too many PackageProvider");
                     }
 
                     $package_provider_class = $candidates[0];

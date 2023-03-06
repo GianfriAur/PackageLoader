@@ -5,7 +5,7 @@ namespace Gianfriaur\PackageLoader\Exception;
 use Gianfriaur\PackageLoader\Service\RetrieveStrategyService\RetrieveStrategyServiceInterface;
 use Throwable;
 
-class BadPackageListException extends PackageLoaderException
+class BadRetrieveStrategyServiceException extends PackageLoaderException
 {
     public function __construct(string $error, int $code = 0, ?Throwable $previous = null)
     {

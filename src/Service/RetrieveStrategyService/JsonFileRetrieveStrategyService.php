@@ -2,7 +2,7 @@
 
 namespace Gianfriaur\PackageLoader\Service\RetrieveStrategyService;
 
-use Gianfriaur\PackageLoader\Exception\BadPackageListException;
+use Gianfriaur\PackageLoader\Exception\BadRetrieveStrategyServiceException;
 use Gianfriaur\PackageLoader\Exception\MissingRetrieveStrategyServiceOptionException;
 use Illuminate\Foundation\Application;
 
@@ -36,7 +36,7 @@ class JsonFileRetrieveStrategyService implements RetrieveStrategyServiceInterfac
             $resource_file = $this->getOption('resource_file');
 
             if (!file_exists($resource_file)) {
-                throw new BadPackageListException('File missing');
+                throw new BadRetrieveStrategyServiceException('File missing');
             }
 
             $this->package_list = json_decode(file_get_contents($resource_file), true);
@@ -50,7 +50,7 @@ class JsonFileRetrieveStrategyService implements RetrieveStrategyServiceInterfac
     {
         $resource_file = $this->getOption('resource_file');
         if (!file_exists($resource_file)) {
-            throw new BadPackageListException('File missing');
+            throw new BadRetrieveStrategyServiceException('File missing');
         }
 
         file_put_contents($resource_file, json_encode($this->package_list, JSON_PRETTY_PRINT));

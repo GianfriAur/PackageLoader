@@ -2,7 +2,7 @@
 
 namespace Gianfriaur\PackageLoader\Service\PackageProviderService;
 
-use Gianfriaur\PackageLoader\Exception\BadPackageListException;
+use Gianfriaur\PackageLoader\Exception\BadRetrieveStrategyServiceException;
 use Gianfriaur\PackageLoader\Exception\MissingPackageProviderException;
 use Gianfriaur\PackageLoader\Exception\MissingPackageProviderServiceOptionException;
 use Gianfriaur\PackageLoader\Exception\PackageProviderNotFoundException;
@@ -92,12 +92,12 @@ class ComposerPackageProviderService implements PackageProviderServiceInterface
                     $composer_file = base_path('vendor/' . $package_name_config['vendor'] . '/composer.json');
 
                     if (!file_exists($composer_file)) {
-                        throw new BadPackageListException("missing composer.json in $composer_file for package $package_name");
+                        throw new BadRetrieveStrategyServiceException("missing composer.json in $composer_file for package $package_name");
                     }
                     $composer_file = json_decode(file_get_contents($composer_file), true);
 
                     if (!array_key_exists('autoload', $composer_file) || !array_key_exists('psr-4', $composer_file['autoload'])) {
-                        throw new BadPackageListException("missing psr-4 autoload in $composer_file for package $package_name");
+                        throw new BadRetrieveStrategyServiceException("missing psr-4 autoload in $composer_file for package $package_name");
                     }
 
                     $psr4s = $composer_file['autoload']['psr-4'];
@@ -114,7 +114,7 @@ class ComposerPackageProviderService implements PackageProviderServiceInterface
                     if (sizeof($candidates) === 0) {
                         throw new MissingPackageProviderException($this->generateClassName(array_key_first($psr4s), $package_name), $package_name_config['vendor']);
                     } elseif (sizeof($candidates) > 1) {
-                        throw new BadPackageListException("$package_name  has too many PackageProvider");
+                        throw new BadRetrieveStrategyServiceException("$package_name  has too many PackageProvider");
                     }
 
                     $package_provider_class = $candidates[0];

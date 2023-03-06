@@ -7,9 +7,9 @@ use Gianfriaur\PackageLoader\Console\Commands\EnablePackageCommand;
 use Gianfriaur\PackageLoader\Console\Commands\ListPackageCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\MigrationPublisherCommand;
 use Gianfriaur\PackageLoader\Exception\BadMigrationStrategyServiceInterfaceException;
-use Gianfriaur\PackageLoader\Exception\BadPackageListException;
+use Gianfriaur\PackageLoader\Exception\BadRetrieveStrategyServiceException;
 use Gianfriaur\PackageLoader\Exception\BadPackageProviderServiceInterfaceException;
-use Gianfriaur\PackageLoader\Exception\BadPackagesListLoaderServiceInterfaceException;
+use Gianfriaur\PackageLoader\Exception\BadPRetrieveStrategyServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\PackageLoaderMissingConfigException;
 use Gianfriaur\PackageLoader\Service\MigrationStrategyService\MigrationStrategyServiceInterface;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
@@ -35,8 +35,8 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
     }
 
     /**
-     * @throws BadPackageListException
-     * @throws BadPackagesListLoaderServiceInterfaceException
+     * @throws BadRetrieveStrategyServiceException
+     * @throws BadPRetrieveStrategyServiceInterfaceException
      * @throws BadPackageProviderServiceInterfaceException
      * @throws BadMigrationStrategyServiceInterfaceException
      */
@@ -123,7 +123,7 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         [$retrieve_strategy_service_class, $retrieve_strategy_service_options] = $this->getRetrieveStrategyServiceDefinition();
 
         if (!is_subclass_of($retrieve_strategy_service_class, RetrieveStrategyServiceInterface::class)) {
-            throw new BadPackagesListLoaderServiceInterfaceException($retrieve_strategy_service_class);
+            throw new BadPRetrieveStrategyServiceInterfaceException($retrieve_strategy_service_class);
         }
 
         // register singleton of retrieve_strategy_service
@@ -190,7 +190,7 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
 
         if ($error = $package_service_provider->validatePackageList()) {
             if ($error !== true) {
-                throw new BadPackageListException($error);
+                throw new BadRetrieveStrategyServiceException($error);
             }
         }
 
