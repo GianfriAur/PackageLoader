@@ -4,6 +4,7 @@ namespace Gianfriaur\PackageLoader\ServiceProvider;
 
 use Gianfriaur\PackageLoader\Console\Commands\DisablePackageCommand;
 use Gianfriaur\PackageLoader\Console\Commands\EnablePackageCommand;
+use Gianfriaur\PackageLoader\Console\Commands\ListPackageCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\MigrationPublisherCommand;
 use Gianfriaur\PackageLoader\Exception\BadMigrationStrategyServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\BadPackageListException;
@@ -12,7 +13,7 @@ use Gianfriaur\PackageLoader\Exception\BadPackagesListLoaderServiceInterfaceExce
 use Gianfriaur\PackageLoader\Exception\PackageLoaderMissingConfigException;
 use Gianfriaur\PackageLoader\Service\MigrationStrategyService\MigrationStrategyServiceInterface;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
-use Gianfriaur\PackageLoader\Service\PackagesListLoaderService\PackagesListLoaderServiceInterface;
+use Gianfriaur\PackageLoader\Service\RetrieveStrategyService\RetrieveStrategyServiceInterface;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -45,7 +46,7 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
 
         $this->registerConfig();
 
-        $this->registerPackagesListLoader();
+        $this->registerRetrieveStrategyService();
 
         //register singleton of PackageServiceProviderInterface on alias package_loader.package_service_provider
         $this->registerPackageServiceProvider();
@@ -94,11 +95,11 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         $this->commands(array_values($this->commands));
     }
 
-    private function getPackagesListLoaderServiceDefinition(): array
+    private function getRetrieveStrategyServiceDefinition(): array
     {
-        $loader = $this->getConfig('loader');
-        $loaders = $this->getConfig('package_list_loaders');
-        return [$loaders[$loader]['class'], $loaders[$loader]['options']];
+        $retrieve_strategy = $this->getConfig('retrieve_strategy');
+        $retrieve_strategies = $this->getConfig('retrieve_strategies');
+        return [$retrieve_strategies[$retrieve_strategy]['class'], $retrieve_strategies[$retrieve_strategy]['options']];
     }
 
     private function getPackageServiceProviderDefinition(): array
@@ -116,20 +117,20 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         return [$migration_strategies[$migration_strategy]['class'], $migration_strategies[$migration_strategy]['options']];
     }
 
-    private function registerPackagesListLoader(): void
+    private function registerRetrieveStrategyService(): void
     {
-        [$packages_list_loader_class, $packages_list_loader_options] = $this->getPackagesListLoaderServiceDefinition();
+        [$retrieve_strategy_service_class, $retrieve_strategy_service_options] = $this->getRetrieveStrategyServiceDefinition();
 
-        if (!is_subclass_of($packages_list_loader_class, PackagesListLoaderServiceInterface::class)) {
-            throw new BadPackagesListLoaderServiceInterfaceException($packages_list_loader_class);
+        if (!is_subclass_of($retrieve_strategy_service_class, RetrieveStrategyServiceInterface::class)) {
+            throw new BadPackagesListLoaderServiceInterfaceException($retrieve_strategy_service_class);
         }
 
-        // register singleton of packages_list_loader
-        $this->app->singleton(PackagesListLoaderServiceInterface::class, function ($app) use ($packages_list_loader_class, $packages_list_loader_options) {
-            return new $packages_list_loader_class($app, $packages_list_loader_options);
+        // register singleton of retrieve_strategy_service
+        $this->app->singleton(RetrieveStrategyServiceInterface::class, function ($app) use ($retrieve_strategy_service_class, $retrieve_strategy_service_options) {
+            return new $retrieve_strategy_service_class($app, $retrieve_strategy_service_options);
         });
-        // add alias of PackagesListLoaderServiceInterface::class on package_loader.packages_list_loader
-        $this->app->alias(PackagesListLoaderServiceInterface::class, 'package_loader.packages_list_loader');
+        // add alias of PackagesListLoaderServiceInterface::class on package_loader.retrieve_strategy_service
+        $this->app->alias(RetrieveStrategyServiceInterface::class, 'package_loader.retrieve_strategy_service');
     }
 
     private function registerPackageServiceProvider(): void
@@ -140,8 +141,8 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
             throw new BadPackageProviderServiceInterfaceException($package_service_provider_class);
         }
 
-        /** @var PackagesListLoaderServiceInterface $package_list_loader */
-        $package_list_loader = $this->app->get(PackagesListLoaderServiceInterface::class);
+        /** @var RetrieveStrategyServiceInterface $package_list_loader */
+        $package_list_loader = $this->app->get(RetrieveStrategyServiceInterface::class);
         // retrieve package_list
         $package_list = $package_list_loader->getPackagesList();
 
@@ -164,11 +165,11 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
             }
 
 
-            // register singleton of packages_list_loader
+            // register singleton of migration.strategy
             $this->app->singleton(MigrationStrategyServiceInterface::class, function ($app) use ($migration_strategy_service_class, $migration_strategy_service_options) {
                 return new $migration_strategy_service_class($app, $migration_strategy_service_options);
             });
-            // add alias of PackagesListLoaderServiceInterface::class on package_loader.packages_list_loader
+            // add alias of PackagesListLoaderServiceInterface::class on package_loader.migration.strategy
             $this->app->alias(MigrationStrategyServiceInterface::class, 'package_loader.migration.strategy');
 
             return true;

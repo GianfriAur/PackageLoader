@@ -1,12 +1,12 @@
 <?php
 
-namespace Gianfriaur\PackageLoader\Service\PackagesListLoaderService;
+namespace Gianfriaur\PackageLoader\Service\RetrieveStrategyService;
 
 use Gianfriaur\PackageLoader\Exception\BadPackageListException;
-use Gianfriaur\PackageLoader\Exception\MissingPackagesListLoaderServiceOptionException;
+use Gianfriaur\PackageLoader\Exception\MissingRetrieveStrategyServiceOptionException;
 use Illuminate\Foundation\Application;
 
-class JsonFilePackagesListLoaderService implements PackagesListLoaderServiceInterface
+class JsonFileRetrieveStrategyService implements RetrieveStrategyServiceInterface
 {
 
     private array $package_list;
@@ -23,7 +23,7 @@ class JsonFilePackagesListLoaderService implements PackagesListLoaderServiceInte
     private function getOption($name): mixed
     {
         if (!array_key_exists($name, $this->options)) {
-            throw new MissingPackagesListLoaderServiceOptionException($name, $this);
+            throw new MissingRetrieveStrategyServiceOptionException($name, $this);
         }
         return $this->options[$name];
     }

@@ -10,7 +10,7 @@ return[
     | Define here which Packages List Loader to use
     |
     */
-    'loader' => 'json_file',
+    'retrieve_strategy' => 'json_file',
 
     /*
     |--------------------------------------------------------------------------
@@ -45,9 +45,9 @@ return[
     | Here all possible Packages List Loader are defined with their default options
     |
     */
-    'package_list_loaders'=>[
+    'retrieve_strategies'=>[
         'json_file'=>[
-            'class'=> \Gianfriaur\PackageLoader\Service\PackagesListLoaderService\JsonFilePackagesListLoaderService::class,
+            'class'=> \Gianfriaur\PackageLoader\Service\RetrieveStrategyService\JsonFileRetrieveStrategyService::class,
             'options'=>[
                 'resource_file' => base_path('packages.json')
             ]

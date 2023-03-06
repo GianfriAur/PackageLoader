@@ -1,10 +1,10 @@
 <?php
 
-namespace Gianfriaur\PackageLoader\Service\PackagesListLoaderService;
+namespace Gianfriaur\PackageLoader\Service\RetrieveStrategyService;
 
 use Illuminate\Foundation\Application;
 
-interface PackagesListLoaderServiceInterface
+interface RetrieveStrategyServiceInterface
 {
     /**
      * @param Application $app

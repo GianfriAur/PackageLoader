@@ -2,7 +2,7 @@
 
 namespace Gianfriaur\PackageLoader\Console\Commands;
 
-use Gianfriaur\PackageLoader\Service\PackagesListLoaderService\PackagesListLoaderServiceInterface;
+use Gianfriaur\PackageLoader\Service\RetrieveStrategyService\RetrieveStrategyServiceInterface;
 use Illuminate\Console\Command;
 
 class DisablePackageCommand extends Command
@@ -14,18 +14,18 @@ class DisablePackageCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(PackagesListLoaderServiceInterface $packagesListLoaderService): void
+    public function handle(RetrieveStrategyServiceInterface $packagesRetrieveService): void
     {
         $package_name = $this->input->getArgument('package-name');
-        $all_package_names = array_keys($packagesListLoaderService->getPackagesList()) ?? [];
+        $all_package_names = array_keys($packagesRetrieveService->getPackagesList()) ?? [];
         if (!in_array($package_name, $all_package_names)) {
             $this->error($package_name . ' not found il list: [' . implode(', ', $all_package_names) . ']');
         }
 
-        $package_config = $packagesListLoaderService->getPackagesList()[$package_name];
+        $package_config = $packagesRetrieveService->getPackagesList()[$package_name];
         $package_config['load'] = false;
 
-        $packagesListLoaderService->updatePackage($package_name, $package_config);
+        $packagesRetrieveService->updatePackage($package_name, $package_config);
 
         $this->info("$package_name Package Disabled!");
     }

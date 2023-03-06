@@ -2,7 +2,7 @@
 
 namespace Gianfriaur\PackageLoader\Exception;
 
-use Gianfriaur\PackageLoader\Service\PackagesListLoaderService\PackagesListLoaderServiceInterface;
+use Gianfriaur\PackageLoader\Service\RetrieveStrategyService\RetrieveStrategyServiceInterface;
 use Throwable;
 
 class BadPackagesListLoaderServiceInterfaceException extends PackageLoaderException
@@ -10,7 +10,7 @@ class BadPackagesListLoaderServiceInterfaceException extends PackageLoaderExcept
     public function __construct(string $providedPackagesListLoaderService = "", int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct(
-            "The supplied PackagesListLoaderService ($providedPackagesListLoaderService) does not implement " . PackagesListLoaderServiceInterface::class,
+            "The supplied PackagesListLoaderService ($providedPackagesListLoaderService) does not implement " . RetrieveStrategyServiceInterface::class,
             $code,
             $previous
         );
