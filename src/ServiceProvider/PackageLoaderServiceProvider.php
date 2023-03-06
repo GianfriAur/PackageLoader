@@ -24,7 +24,8 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
 
     protected array $commands = [
         EnablePackageCommand::class,
-        DisablePackageCommand::class
+        DisablePackageCommand::class,
+        ListPackageCommand::class
     ];
 
 
