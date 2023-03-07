@@ -1,10 +1,10 @@
 <?php
 
-return[
+return [
 
     /*
     |--------------------------------------------------------------------------
-    | Packages List Loader
+    | Retrieve Strategy
     |--------------------------------------------------------------------------
     |
     | Define here which Retrieve Strategy to use
@@ -21,6 +21,16 @@ return[
     |
     */
     'provider' => 'default',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Localization Strategy
+    |--------------------------------------------------------------------------
+    |
+    | Define here which Localization Strategy to use
+    |
+    */
+    'localization_strategy' => 'default',
 
     /*
     |--------------------------------------------------------------------------
@@ -45,10 +55,10 @@ return[
     | Here all possible Retrieve Strategy are defined with their default options
     |
     */
-    'retrieve_strategies'=>[
-        'json_file'=>[
-            'class'=> \Gianfriaur\PackageLoader\Service\RetrieveStrategyService\JsonFileRetrieveStrategyService::class,
-            'options'=>[
+    'retrieve_strategies' => [
+        'json_file' => [
+            'class' => \Gianfriaur\PackageLoader\Service\RetrieveStrategyService\JsonFileRetrieveStrategyService::class,
+            'options' => [
                 'resource_file' => base_path('packages.json')
             ]
         ]
@@ -62,36 +72,52 @@ return[
     | Here all possible Package Service Providers are defined with their options
     |
     */
-    'package_service_providers'=> [
-        'default'=>[
-            'class'=> \Gianfriaur\PackageLoader\Service\PackageProviderService\DefaultPackageProviderService::class,
-            'options'=>[]
+    'package_service_providers' => [
+        'default' => [
+            'class' => \Gianfriaur\PackageLoader\Service\PackageProviderService\DefaultPackageProviderService::class,
+            'options' => []
         ],
-        'composer'=>[
-            'class'=> \Gianfriaur\PackageLoader\Service\PackageProviderService\ComposerPackageProviderService::class,
-            'options'=>[
+        'composer' => [
+            'class' => \Gianfriaur\PackageLoader\Service\PackageProviderService\ComposerPackageProviderService::class,
+            'options' => [
                 // ex: in Custom package the provider is named CustomPackageProvider
-                'suffix'=>'PackageProvider',
+                'suffix' => 'PackageProvider',
                 // ex: in Custom package the provider is under [ composer psr-4 ]/PackageProvider/Custom[ suffix ]
-                'namespace'=>'PackageProvider'
+                'namespace' => 'PackageProvider'
             ]
         ],
-        'directory'=>[
-            'class'=> \Gianfriaur\PackageLoader\Service\PackageProviderService\DirectoryPackageProviderService::class,
-            'options'=>[
+        'directory' => [
+            'class' => \Gianfriaur\PackageLoader\Service\PackageProviderService\DirectoryPackageProviderService::class,
+            'options' => [
                 // ex: in Custom package the provider is under [ namespace_prefix ]/Custom/[  namespace  ]/Custom[    suffix   ]
                 //                                             [ namespace_prefix ]/Custom/[  namespace  ]/CustomPackageProvider
-                'suffix'=>'PackageProvider',
+                'suffix' => 'PackageProvider',
                 // ex: in Custom package the provider is under [ namespace_prefix ]/Custom/[  namespace  ]/Custom[    suffix   ]
                 //                                                         Packages/Custom/[  namespace  ]/Custom[    suffix   ]
-                'namespace_prefix'=>'Packages',
+                'namespace_prefix' => 'Packages',
                 // ex: in Custom package the provider is under [ namespace_prefix ]/Custom/[  namespace  ]/Custom[    suffix   ]
                 //                                             [ namespace_prefix ]/Custom/PackageProvider/Custom[    suffix   ]
-                'namespace'=>'PackageProvider'
+                'namespace' => 'PackageProvider'
 
                 // At the end the class of PackageProvider is  Packages/Custom/PackageProvider/CustomPackageProvider
             ]
         ]
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Localization Strategies List
+    |--------------------------------------------------------------------------
+    |
+    | Here all possible Localization Strategy are defined with their options
+    |
+    */
+    'localization_strategies' => [
+        'default' => [
+            'class' => \Gianfriaur\PackageLoader\Service\LocalizationStrategyService\DirectoryLocalizationStrategyService::class,
+            'options' => []
+        ],
     ],
 
     /*
@@ -102,15 +128,15 @@ return[
     | Here all possible Migration Strategy are defined with their options
     |
     */
-    'migration_strategies'=>[
-        'default' =>[
-            'class'=> \Gianfriaur\PackageLoader\Service\MigrationStrategyService\DefaultMigrationStrategyServiceService::class,
-            'options'=>[]
+    'migration_strategies' => [
+        'default' => [
+            'class' => \Gianfriaur\PackageLoader\Service\MigrationStrategyService\DefaultMigrationStrategyServiceService::class,
+            'options' => []
         ],
-        'vault' =>[
-            'class'=> \Gianfriaur\PackageLoader\Service\MigrationStrategyService\VaultMigrationStrategyServiceService::class,
-            'options'=>[
-                'table'=>'packages_migrations'
+        'vault' => [
+            'class' => \Gianfriaur\PackageLoader\Service\MigrationStrategyService\VaultMigrationStrategyServiceService::class,
+            'options' => [
+                'table' => 'packages_migrations'
             ]
         ],
     ]

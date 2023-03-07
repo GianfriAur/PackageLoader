@@ -6,11 +6,13 @@ use Gianfriaur\PackageLoader\Console\Commands\DisablePackageCommand;
 use Gianfriaur\PackageLoader\Console\Commands\EnablePackageCommand;
 use Gianfriaur\PackageLoader\Console\Commands\ListPackageCommand;
 use Gianfriaur\PackageLoader\Console\Commands\Migrations\MigrationPublisherCommand;
+use Gianfriaur\PackageLoader\Exception\BadLocalizationStrategyServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\BadMigrationStrategyServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\BadRetrieveStrategyServiceException;
 use Gianfriaur\PackageLoader\Exception\BadPackageProviderServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\BadRetrieveStrategyServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\PackageLoaderMissingConfigException;
+use Gianfriaur\PackageLoader\Service\LocalizationStrategyService\LocalizationStrategyServiceInterface;
 use Gianfriaur\PackageLoader\Service\MigrationStrategyService\MigrationStrategyServiceInterface;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
 use Gianfriaur\PackageLoader\Service\RetrieveStrategyService\RetrieveStrategyServiceInterface;
@@ -39,6 +41,7 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
      * @throws BadRetrieveStrategyServiceInterfaceException
      * @throws BadPackageProviderServiceInterfaceException
      * @throws BadMigrationStrategyServiceInterfaceException
+     * @throws BadLocalizationStrategyServiceInterfaceException
      */
     public function register(): void
     {
@@ -49,6 +52,11 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         //register singleton of PackageServiceProviderInterface on alias package_loader.package_service_provider
         $this->registerPackageServiceProvider();
         $this->loadPackageServiceProvider();
+
+        $has_localization_strategy = $this->registerLocalizationStrategyService();
+        if ($has_localization_strategy){
+            $this->loadLocalizationStrategyService();
+        }
 
         $has_migration_strategy = $this->registerMigrationStrategyService();
 
@@ -94,6 +102,14 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         return [$retrieve_strategies[$retrieve_strategy]['class'], $retrieve_strategies[$retrieve_strategy]['options']];
     }
 
+    private function getLocalizationStrategyServiceDefinition(): array
+    {
+        $localization_strategy = $this->getConfig('localization_strategy');
+        if ($localization_strategy === null) return [null, []];
+        $localization_strategies = $this->getConfig('localization_strategies');
+        return [$localization_strategies[$localization_strategy]['class'], $localization_strategies[$localization_strategy]['options']];
+    }
+
     private function getPackageServiceProviderDefinition(): array
     {
         $provider = $this->getConfig('provider');
@@ -107,6 +123,25 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         if ($migration_strategy === null) return [null, []];
         $migration_strategies = $this->getConfig('migration_strategies');
         return [$migration_strategies[$migration_strategy]['class'], $migration_strategies[$migration_strategy]['options']];
+    }
+
+    private function registerLocalizationStrategyService(): bool
+    {
+        [$localization_strategy_service_class, $localization_strategy_service_options] = $this->getLocalizationStrategyServiceDefinition();
+        if ($localization_strategy_service_class !== null) {
+            if (!is_subclass_of($localization_strategy_service_class, LocalizationStrategyServiceInterface::class)) {
+                throw new BadLocalizationStrategyServiceInterfaceException($localization_strategy_service_class);
+            }
+
+            // register singleton of retrieve_strategy_service
+            $this->app->singleton(LocalizationStrategyServiceInterface::class, function ($app) use ($localization_strategy_service_class, $localization_strategy_service_options) {
+                return new $localization_strategy_service_class($app, $this->app->get(PackageProviderServiceInterface::class), $localization_strategy_service_options);
+            });
+            // add alias of PackagesListLoaderServiceInterface::class on package_loader.retrieve_strategy_service
+            $this->app->alias(LocalizationStrategyServiceInterface::class, 'package_loader.localization_strategy_service');
+            return true;
+        }
+        return false;
     }
 
     private function registerRetrieveStrategyService(): void
@@ -172,6 +207,14 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
     private function registerPackageMigrationServiceProvider(): void
     {
         $this->app->register(PackageMigrationServiceProvider::class);
+    }
+
+
+    private function loadLocalizationStrategyService():void
+    {
+        /** @var LocalizationStrategyServiceInterface $package_service_provider */
+        $package_service_provider = $this->app->get('package_loader.localization_strategy_service');
+        $package_service_provider->registerLocalizationOnResolving();
     }
 
     private function loadPackageServiceProvider(): void
