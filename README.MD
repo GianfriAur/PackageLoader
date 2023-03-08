@@ -31,7 +31,25 @@ obtaining good results
 
 you can find the stress test in this test: `tests/Stress/StressTest.php`
 
+## Why use LocalizationStrategy
+
+Since PackageProvider extends ServiceProvider we can wonder why it has been given the possibility 
+to use a strategy specifically to load translations instead of using directly `$this->loadTranslationsFrom($path,$namespace);`
+
+There is a very simple answer to this legitimate question, if for each PackageProvider it is necessary 
+to individually register a callback to the `afterResolving` and check if the 'translator' service has 
+been resolved and then load the translations, this as the packages increase can cause a drop in performance.
+
+Yes it is true of just ~50 milliseconds for 100 packets
+
+With the `DefaultLocalizationStrategy` Service this is done only once leaving only the time to read the files
+
+But hey, there is, using it costs you nothing, but you save some time in requests
+
+> In the future there will be a command that will be loaded by the strategy that will allow you in production to collapse all the translation files of all the packages into a single one so that I could further reduce the times for loading all the translation files
+
+
 ## TODO
-* automatic translation management
-* publish to composer packages
-* Write doc
+* [ ] Localization make build command
+* [ ] publish to composer packages
+* [ ] [WIP] Write doc

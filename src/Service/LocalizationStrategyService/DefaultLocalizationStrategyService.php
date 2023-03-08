@@ -3,13 +3,14 @@
 namespace Gianfriaur\PackageLoader\Service\LocalizationStrategyService;
 
 use Gianfriaur\PackageLoader\PackageProvider\AbstractPackageProvider;
+use Gianfriaur\PackageLoader\PackageProvider\PackageWithLocalizationInterface;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
 use Illuminate\Contracts\Translation\Translator as TranslatorContract;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Foundation\Application;
 use Illuminate\Translation\Translator;
 
-readonly class DirectoryLocalizationStrategyService implements LocalizationStrategyServiceInterface
+readonly class DefaultLocalizationStrategyService implements LocalizationStrategyServiceInterface
 {
 
     /** @noinspection PhpPropertyOnlyWrittenInspection */
@@ -31,9 +32,8 @@ readonly class DirectoryLocalizationStrategyService implements LocalizationStrat
     public function registerLocalizationOnResolving():void {
         $this->callAfterResolving('translator', function (Translator $translator){
             foreach ( $this->packageProviderService->getPackageProviders() as $package_name => $packageProvider){
-                if ($packageProvider->getTranslationPath()){
-                    dump($packageProvider->getTranslationPath());
-                    $translator->addNamespace($package_name, $packageProvider->getTranslationPath());
+                if ($packageProvider instanceof PackageWithLocalizationInterface){
+                    $translator->addNamespace($packageProvider->getTranslationNamespace(), $packageProvider->getTranslationPath());
                 }
            }
         });

@@ -28,9 +28,25 @@ return [
     |--------------------------------------------------------------------------
     |
     | Define here which Localization Strategy to use
+    | Use null to not load localization strategy, in this case you
+    |     need to use the default Laravel methodology if your
+    |     package have same translation
     |
     */
     'localization_strategy' => 'default',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Configuration Strategy
+    |--------------------------------------------------------------------------
+    |
+    | Define here which Configuration Strategy to use
+    | Use null to not load Configuration strategy, in this case you
+    |     need to use the default Laravel methodology if your
+    |     package have same configuration
+    |
+    */
+    'configuration_strategy' => 'default',
 
     /*
     |--------------------------------------------------------------------------
@@ -115,7 +131,22 @@ return [
     */
     'localization_strategies' => [
         'default' => [
-            'class' => \Gianfriaur\PackageLoader\Service\LocalizationStrategyService\DirectoryLocalizationStrategyService::class,
+            'class' => \Gianfriaur\PackageLoader\Service\LocalizationStrategyService\DefaultLocalizationStrategyService::class,
+            'options' => []
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Configuration Strategies List
+    |--------------------------------------------------------------------------
+    |
+    | Here all possible Configuration Strategy are defined with their options
+    |
+    */
+    'configuration_strategies' => [
+        'default' => [
+            'class' => \Gianfriaur\PackageLoader\Service\ConfigurationStrategyService\DefaultConfigurationStrategyService::class,
             'options' => []
         ],
     ],
