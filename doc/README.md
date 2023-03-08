@@ -3,10 +3,13 @@
 
 ## Functionality
 
-- [X] `[OK]` Parallel migration
-- [X] `[OK]` Package Retrieve 
-- [X] `[OK]` Package Provider
-- [ ] `[TODO]` Gestione delle translation
+- [X] Parallel migration
+- [X] Package Retrieve 
+- [X] Package Provider
+- [X] Localization
+  - [ ] [TODO] Production Compress Localization Command  
+- [X] Configuration
+  - [ ] [TODO] Production Compress Configuration Command
 
 ## Configuration
 
@@ -20,6 +23,7 @@ Read full documentation [Config Documentation](./config/default_config.md)
   - Defines how to load packages into the application
 - [X] MigrationStrategy (to write the documentation)
   - Defines the strategy with which migrations are made
-- [ ] TranslationStrategy (to implement | to write the documentation)
+- [X] TranslationStrategy ( to write the documentation)
   - Defines the strategy with which translations are loaded
-  
+- [X] ConfigurationStrategy ( to write the documentation)
+  - Defines the strategy with which configuration are loaded 
