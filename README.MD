@@ -15,6 +15,23 @@ use this loader if:
 * you can write your own parallel migration strategies (although I recommend to use the one that is already built-in)
 * you can write your own package recovery mode
 
+## Install 
+
+### require package 
+> composer require gianfriaur/package-loader
+
+### publish configuration file
+> php artisan vendor:publish --provider="Gianfriaur\PackageLoader\PackageLoaderServiceProvider"
+
+### first setup
+
+* [TODO:DOC: package in directory + json file retrieve method](#)
+* [TODO:DOC: package in vendor + json file retrieve method](#)
+
+### tips
+
+ * If it is useful you can manage the migrations of your packages in a parallel way from those of laravel [TODO:DOC: configure vault migration_strategy](#)
+
 ## Documentation
 
 You can find the full documentation at [this location](./doc/README.md)
