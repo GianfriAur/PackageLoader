@@ -1,6 +1,7 @@
 {
   "name": "gianfriaur/package-loader",
   "description": "Laravel Package management",
+  "license": "MIT",
   "keywords": [
     "modules",
     "laravel",
