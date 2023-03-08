@@ -1,6 +1,22 @@
 {
   "name": "gianfriaur/package-loader",
+  "description": "Laravel Package management",
+  "keywords": [
+    "modules",
+    "laravel",
+    "gianfriaur",
+    "module",
+    "package",
+    "loader",
+    "manager"
+  ],
   "type": "library",
+  "authors": [
+    {
+      "name": "GianfriAur",
+      "email": "gianfri.aur@gmail.com"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "Gianfriaur\\PackageLoader\\": "src/"
@@ -11,12 +27,6 @@
       "Gianfriaur\\PackageLoader\\Tests\\": "tests/"
     }
   },
-  "authors": [
-    {
-      "name": "GianfriAur",
-      "email": "gianfri.aur@gmail.com"
-    }
-  ],
   "require": {
     "php": "^8.1",
     "ext-pdo": "*",
