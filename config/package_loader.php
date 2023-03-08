@@ -8,9 +8,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | Define here which Retrieve Strategy to use
+    | Use null to not load Retrieve strategy, in this case you
+    |     no package are loading
     |
     */
-    'retrieve_strategy' => 'json_file',
+    'retrieve_strategy' => null,
 
     /*
     |--------------------------------------------------------------------------

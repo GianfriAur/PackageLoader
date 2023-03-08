@@ -2,7 +2,7 @@
 
 namespace Gianfriaur\PackageLoader\Exception;
 
-use Gianfriaur\PackageLoader\ServiceProvider\PackageLoaderServiceProvider;
+use Gianfriaur\PackageLoader\PackageLoaderServiceProvider;
 use Throwable;
 
 class PackageLoaderMissingConfigException extends PackageLoaderException

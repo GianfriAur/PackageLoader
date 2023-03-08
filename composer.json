@@ -45,7 +45,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Gianfriaur\\PackageLoader\\ServiceProvider\\PackageLoaderServiceProvider"
+        "Gianfriaur\\PackageLoader\\PackageLoaderServiceProvider"
       ]
     }
   }

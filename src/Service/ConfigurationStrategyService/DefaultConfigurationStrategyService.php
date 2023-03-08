@@ -3,7 +3,6 @@
 namespace Gianfriaur\PackageLoader\Service\ConfigurationStrategyService;
 
 use Gianfriaur\PackageLoader\PackageProvider\PackageWithConfigurationInterface;
-use Gianfriaur\PackageLoader\PackageProvider\PackageWithLocalizationInterface;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
 use Illuminate\Contracts\Foundation\CachesConfiguration;
 use Illuminate\Foundation\Application;

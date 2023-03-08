@@ -2,11 +2,8 @@
 
 namespace Gianfriaur\PackageLoader\Service\LocalizationStrategyService;
 
-use Gianfriaur\PackageLoader\PackageProvider\AbstractPackageProvider;
 use Gianfriaur\PackageLoader\PackageProvider\PackageWithLocalizationInterface;
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
-use Illuminate\Contracts\Translation\Translator as TranslatorContract;
-use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Foundation\Application;
 use Illuminate\Translation\Translator;
 

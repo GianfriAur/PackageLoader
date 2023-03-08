@@ -9,8 +9,8 @@ use Gianfriaur\PackageLoader\Console\Commands\Migrations\MigrationPublisherComma
 use Gianfriaur\PackageLoader\Exception\BadConfigurationStrategyServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\BadLocalizationStrategyServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\BadMigrationStrategyServiceInterfaceException;
-use Gianfriaur\PackageLoader\Exception\BadRetrieveStrategyServiceException;
 use Gianfriaur\PackageLoader\Exception\BadPackageProviderServiceInterfaceException;
+use Gianfriaur\PackageLoader\Exception\BadRetrieveStrategyServiceException;
 use Gianfriaur\PackageLoader\Exception\BadRetrieveStrategyServiceInterfaceException;
 use Gianfriaur\PackageLoader\Exception\PackageLoaderMissingConfigException;
 use Gianfriaur\PackageLoader\Service\ConfigurationStrategyService\ConfigurationStrategyServiceInterface;
@@ -21,7 +21,7 @@ use Gianfriaur\PackageLoader\Service\RetrieveStrategyService\RetrieveStrategySer
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
-class PackageLoaderServiceProvider extends ServiceProvider implements DeferrableProvider
+class ServicesProvider extends ServiceProvider implements DeferrableProvider
 {
     const CONFIG_NAMESPACE = "package_loader";
     const CONFIG_FILE_NANE = "package_loader.php";
@@ -35,7 +35,6 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
 
     public function boot(): void
     {
-        $this->bootConfig();
     }
 
     /**
@@ -48,49 +47,36 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
      */
     public function register(): void
     {
-        $this->registerConfig();
+        $has_retrieve_strategy = $this->registerRetrieveStrategyService();
 
-        $this->registerRetrieveStrategyService();
+        if ($has_retrieve_strategy) {
 
-        //register singleton of PackageServiceProviderInterface on alias package_loader.package_service_provider
-        $this->registerPackageServiceProvider();
-        $this->loadPackageServiceProvider();
+            //register singleton of PackageServiceProviderInterface on alias package_loader.package_service_provider
+            $this->registerPackageServiceProvider();
+            $this->loadPackageServiceProvider();
 
-        $has_localization_strategy = $this->registerLocalizationStrategyService();
-        if ($has_localization_strategy){
-            $this->loadLocalizationStrategyService();
-        }
+            $has_localization_strategy = $this->registerLocalizationStrategyService();
+            if ($has_localization_strategy) {
+                $this->loadLocalizationStrategyService();
+            }
 
-        $has_configuration_strategy = $this->registerConfigurationStrategyService();
-        if ($has_configuration_strategy){
-            $this->loadConfigurationStrategyService();
-        }
+            $has_configuration_strategy = $this->registerConfigurationStrategyService();
+            if ($has_configuration_strategy) {
+                $this->loadConfigurationStrategyService();
+            }
 
-        $has_migration_strategy = $this->registerMigrationStrategyService();
+            $has_migration_strategy = $this->registerMigrationStrategyService();
 
-        if ($this->app->runningInConsole()) {
-            $this->registerCommands();
+            if ($this->app->runningInConsole()) {
+                $this->registerCommands();
 
-            if ($has_migration_strategy) {
-                $this->registerPackageMigrationServiceProvider();
-            } else {
-                $this->registerMigrationPublishCommand();
+                if ($has_migration_strategy) {
+                    $this->registerPackageMigrationServiceProvider();
+                } else {
+                    $this->registerMigrationPublishCommand();
+                }
             }
         }
-    }
-
-    private function bootConfig(): void
-    {
-        $this->publishes([
-            __DIR__ . '/../../config/' . self::CONFIG_FILE_NANE => config_path(self::CONFIG_FILE_NANE),
-        ]);
-    }
-
-    private function registerConfig(): void
-    {
-        $this->mergeConfigFrom(
-            __DIR__ . '/../../config/' . self::CONFIG_FILE_NANE, self::CONFIG_NAMESPACE
-        );
     }
 
     private function registerMigrationPublishCommand()
@@ -105,14 +91,15 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
 
     private function getRetrieveStrategyServiceDefinition(): array
     {
-        $retrieve_strategy = $this->getConfig('retrieve_strategy');
+        $retrieve_strategy = $this->getConfig('retrieve_strategy',true);
+        if ($retrieve_strategy === null) return [null, []];
         $retrieve_strategies = $this->getConfig('retrieve_strategies');
         return [$retrieve_strategies[$retrieve_strategy]['class'], $retrieve_strategies[$retrieve_strategy]['options']];
     }
 
     private function getLocalizationStrategyServiceDefinition(): array
     {
-        $localization_strategy = $this->getConfig('localization_strategy');
+        $localization_strategy = $this->getConfig('localization_strategy',true);
         if ($localization_strategy === null) return [null, []];
         $localization_strategies = $this->getConfig('localization_strategies');
         return [$localization_strategies[$localization_strategy]['class'], $localization_strategies[$localization_strategy]['options']];
@@ -120,7 +107,7 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
 
     private function getConfigurationStrategyServiceDefinition(): array
     {
-        $configuration_strategy = $this->getConfig('configuration_strategy');
+        $configuration_strategy = $this->getConfig('configuration_strategy',true);
         if ($configuration_strategy === null) return [null, []];
         $configuration_strategies = $this->getConfig('configuration_strategies');
         return [$configuration_strategies[$configuration_strategy]['class'], $configuration_strategies[$configuration_strategy]['options']];
@@ -179,20 +166,26 @@ class PackageLoaderServiceProvider extends ServiceProvider implements Deferrable
         return false;
     }
 
-    private function registerRetrieveStrategyService(): void
+    private function registerRetrieveStrategyService(): bool
     {
         [$retrieve_strategy_service_class, $retrieve_strategy_service_options] = $this->getRetrieveStrategyServiceDefinition();
 
-        if (!is_subclass_of($retrieve_strategy_service_class, RetrieveStrategyServiceInterface::class)) {
-            throw new BadRetrieveStrategyServiceInterfaceException($retrieve_strategy_service_class);
-        }
+        if ($retrieve_strategy_service_class !== null) {
 
-        // register singleton of retrieve_strategy_service
-        $this->app->singleton(RetrieveStrategyServiceInterface::class, function ($app) use ($retrieve_strategy_service_class, $retrieve_strategy_service_options) {
-            return new $retrieve_strategy_service_class($app, $retrieve_strategy_service_options);
-        });
-        // add alias of PackagesListLoaderServiceInterface::class on package_loader.retrieve_strategy_service
-        $this->app->alias(RetrieveStrategyServiceInterface::class, 'package_loader.retrieve_strategy_service');
+            if (!is_subclass_of($retrieve_strategy_service_class, RetrieveStrategyServiceInterface::class)) {
+                throw new BadRetrieveStrategyServiceInterfaceException($retrieve_strategy_service_class);
+            }
+
+            // register singleton of retrieve_strategy_service
+            $this->app->singleton(RetrieveStrategyServiceInterface::class, function ($app) use ($retrieve_strategy_service_class, $retrieve_strategy_service_options) {
+                return new $retrieve_strategy_service_class($app, $retrieve_strategy_service_options);
+            });
+            // add alias of PackagesListLoaderServiceInterface::class on package_loader.retrieve_strategy_service
+            $this->app->alias(RetrieveStrategyServiceInterface::class, 'package_loader.retrieve_strategy_service');
+
+            return true;
+        }
+        return false;
     }
 
     private function registerPackageServiceProvider(): void

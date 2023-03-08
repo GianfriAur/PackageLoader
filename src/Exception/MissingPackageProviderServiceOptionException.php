@@ -3,7 +3,7 @@
 namespace Gianfriaur\PackageLoader\Exception;
 
 use Gianfriaur\PackageLoader\Service\PackageProviderService\PackageProviderServiceInterface;
-use Gianfriaur\PackageLoader\ServiceProvider\PackageLoaderServiceProvider;
+use Gianfriaur\PackageLoader\PackageLoaderServiceProvider;
 use Throwable;
 
 class MissingPackageProviderServiceOptionException extends PackageLoaderException

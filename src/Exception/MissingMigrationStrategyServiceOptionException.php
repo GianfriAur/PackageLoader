@@ -3,7 +3,7 @@
 namespace Gianfriaur\PackageLoader\Exception;
 
 use Gianfriaur\PackageLoader\Service\MigrationStrategyService\MigrationStrategyServiceInterface;
-use Gianfriaur\PackageLoader\ServiceProvider\PackageLoaderServiceProvider;
+use Gianfriaur\PackageLoader\PackageLoaderServiceProvider;
 use Throwable;
 
 class MissingMigrationStrategyServiceOptionException extends PackageLoaderException
