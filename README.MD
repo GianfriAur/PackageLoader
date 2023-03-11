@@ -4,31 +4,36 @@ just another package manager for `laravel` nothing more and nothing less
 
 but if you want to use it you are welcome
 
-## Use case
-use this loader if:
-* you want a system to manage migrations parallel to the laravel one
-* you cannot use the laravel system to mount service providers from composer
-  * for example your packages can be enabled or disabled dynamically by the user
+## Goal
 
-## Pros
-* you can write your own package loading strategies
-* you can write your own parallel migration strategies (although I recommend to use the one that is already built-in)
-* you can write your own package recovery mode
+In an ideal world we will all be the standard,
+
+But it's also true that if there were a standard, our project wouldn't be the only one,
+wouldn't it?
+
+Starting from this we can say that it is not always possible to make things according to
+the existing standard, or simply for the 'company' logic this is not possible
+
+The purpose of this library is to provide a tool without forcing you to necessarily follow
+the rules decided at the start, if you want you can write your own logic if necessary and
+expect that nothing will 'break'
+
+Also, because you can't think about what you need before you need it 😉
 
 ## Install 
 
-### require package 
+### Require package 
 > composer require gianfriaur/package-loader
 
-### publish configuration file
+### Publish configuration file
 > php artisan vendor:publish --provider="Gianfriaur\PackageLoader\PackageLoaderServiceProvider"
 
-### first setup
+### First setup
 
 * [TODO:DOC: package in directory + json file retrieve method](#)
 * [TODO:DOC: package in vendor + json file retrieve method](#)
 
-### tips
+### Tips
 
  * If it is useful you can manage the migrations of your packages in a parallel way from those of laravel [TODO:DOC: configure vault migration_strategy](#)
 
@@ -65,8 +70,20 @@ But hey, there is, using it costs you nothing, but you save some time in request
 
 > In the future there will be a command that will be loaded by the strategy that will allow you in production to collapse all the translation files of all the packages into a single one so that I could further reduce the times for loading all the translation files
 
-
-## TODO
-* [ ] Localization make build command
-* [ ] publish to composer packages
-* [ ] [WIP] Write doc
+## Next releases
+ - ### 1.1.x
+   - Configuration
+     - New strategy `JsonConfigurationStrategyService`
+     - New strategy `JollyConfigurationStrategyService`
+   - New Features
+     - New kind of strategy `ViewStrategyService`
+   
+ - ### 1.2.x
+   - Localization
+     - Production Compress Localization Command  
+   - Configuration
+     - New strategy `DatabaseConfigurationStrategyService`
+     
+- ### 1.3.x
+  - Configuration
+    - Production Compress Configuration Command

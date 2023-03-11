@@ -60,7 +60,7 @@ class CustomPackageProviderService implements PackageProviderServiceInterface
 ## Registration and use of our `CustomPackageProviderService`
 
 Once our PackageProvider Service has been created, we need to load it into
-`config/package_loader.php` in the option `package_list_loaders`
+`config/package_loader.php` in the option `package_service_providers`
 
 ```PHP
 'package_service_providers'=>[

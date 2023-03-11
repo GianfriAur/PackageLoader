@@ -7,9 +7,9 @@
 - [X] Package Retrieve 
 - [X] Package Provider
 - [X] Localization
-  - [ ] [TODO] Production Compress Localization Command  
+  - [ ] `NEXT RELEASE 1.2 :`  Production Compress Localization Command  
 - [X] Configuration
-  - [ ] [TODO] Production Compress Configuration Command
+  - [ ] `NEXT RELEASE 1.3 :` Production Compress Configuration Command
 
 ## Configuration
 
@@ -23,7 +23,7 @@ Read full documentation [Config Documentation](./config/default_config.md)
   - Defines how to load packages into the application
 - [X] MigrationStrategy (to write the documentation)
   - Defines the strategy with which migrations are made
-- [X] TranslationStrategy ( to write the documentation)
+- [X] [TranslationStrategy](./localization_strategy_service/LocalizationStrategyService.md)
   - Defines the strategy with which translations are loaded
-- [X] ConfigurationStrategy ( to write the documentation)
+- [X] [ConfigurationStrategy](./configuration_strategy_service/ConfigurationStrategyService.md)
   - Defines the strategy with which configuration are loaded 
