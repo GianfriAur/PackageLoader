@@ -53,7 +53,7 @@ class ServicesProvider extends ServiceProvider implements DeferrableProvider
 
             //register singleton of PackageServiceProviderInterface on alias package_loader.package_service_provider
             $this->registerPackageServiceProvider();
-            $this->loadPackageServiceProvider();
+ 
 
             $has_localization_strategy = $this->registerLocalizationStrategyService();
             if ($has_localization_strategy) {
@@ -203,7 +203,10 @@ class ServicesProvider extends ServiceProvider implements DeferrableProvider
 
         // register singleton of package_service_provider
         $this->app->singleton(PackageProviderServiceInterface::class, function ($app) use ($package_service_provider_class, $package_list, $package_service_provider_options) {
-            return new $package_service_provider_class($app, $package_list, $package_service_provider_options);
+            $package_service_provider= new $package_service_provider_class($app, $package_list, $package_service_provider_options);
+            $this->loadPackageServiceProvider($package_service_provider);
+            return $package_service_provider;
+            
         });
         // add alias of $package_service_provider_class::class on package_loader.package_service_provider
         $this->app->alias(PackageProviderServiceInterface::class, 'package_loader.package_service_provider');
@@ -252,11 +255,8 @@ class ServicesProvider extends ServiceProvider implements DeferrableProvider
         $configuration_strategy_service->registerConfigurations();
     }
 
-    private function loadPackageServiceProvider(): void
+    private function loadPackageServiceProvider(PackageProviderServiceInterface $package_service_provider): void
     {
-        /** @var PackageProviderServiceInterface $package_service_provider */
-        $package_service_provider = $this->app->get('package_loader.package_service_provider');
-
         if ($error = $package_service_provider->validatePackageList()) {
             if ($error !== true) {
                 throw new BadRetrieveStrategyServiceException($error);
