@@ -204,12 +204,15 @@ class ServicesProvider extends ServiceProvider implements DeferrableProvider
         // register singleton of package_service_provider
         $this->app->singleton(PackageProviderServiceInterface::class, function ($app) use ($package_service_provider_class, $package_list, $package_service_provider_options) {
             $package_service_provider= new $package_service_provider_class($app, $package_list, $package_service_provider_options);
-            $this->loadPackageServiceProvider($package_service_provider);
+
             return $package_service_provider;
             
         });
         // add alias of $package_service_provider_class::class on package_loader.package_service_provider
         $this->app->alias(PackageProviderServiceInterface::class, 'package_loader.package_service_provider');
+
+        $package_service_provider = $this->app->get(PackageProviderServiceInterface::class);
+        $this->loadPackageServiceProvider($package_service_provider);
 
     }
 
