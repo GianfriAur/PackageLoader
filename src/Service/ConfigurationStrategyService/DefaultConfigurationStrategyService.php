@@ -26,9 +26,12 @@ readonly class DefaultConfigurationStrategyService implements ConfigurationStrat
                         require $packageProvider->getConfigurationFilePath(), $config->get($packageProvider->getConfigurationNamespace(), [])
                     ));
 
+                   if( (new \ReflectionClass($packageProvider))->hasMethod('registerWithConfig')){
+                       /** @noinspection PhpUndefinedMethodInspection */
+                       $packageProvider->registerWithConfig();
+                   }
                 }
             }
-
         }
     }
 }
